@@ -33,7 +33,7 @@
     "mockery": "1.4.X",
     "sinon": "1.17.x",
     "coveralls": "2.11.x",
-    "istanbul": "0.3.x",
+    "istanbul": "0.3.x"
   },
   "dependencies": {
     "cookie": "0.2.x"
