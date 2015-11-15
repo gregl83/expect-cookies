@@ -73,16 +73,16 @@ function ExpectCookie(options, assertions) {
 
 
 /**
- * Assert cookie is set for first time
+ * Assert cookie is set and new
  *
  * @param {object} options for cookie
  * @param {function(req, res)[]} assertions
  * @returns {function}
  */
-ExpectCookie.first = function(options, assertions) {
+ExpectCookie.new = function(options, assertions) {
   if (!Array.isArray(assertions)) assertions = [];
 
-  // todo add first assertion
+  // todo add new assertion
 
   return ExpectCookie(options, assertions);
 };
@@ -95,10 +95,10 @@ ExpectCookie.first = function(options, assertions) {
  * @param {function(req, res)[]} assertions
  * @returns {function}
  */
-ExpectCookie.notSet = function(options, assertions) {
+ExpectCookie.not = function(options, assertions) {
   if (!Array.isArray(assertions)) assertions = [];
 
-  // todo add notSet assertion
+  // todo add not assertion
 
   return ExpectCookie(options, assertions);
 };

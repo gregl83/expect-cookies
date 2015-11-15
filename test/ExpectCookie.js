@@ -7,7 +7,7 @@ var Cookie = require('../');
 
 
 describe('Cookie', function() {
-  describe('.first', function() {
+  describe('.new', function() {
     it('asserts true if cookie is set and was NOT already set', function(done) {
       var expires = new Date();
       var secret = 'secret';
@@ -25,7 +25,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.first({
+          var assertion = Cookie.new({
             "name": 'substance',
             "value": 'active',
             "domain": 'domain.com',
@@ -61,7 +61,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.first({
+          var assertion = Cookie.new({
             "name": 'substance',
             "value": 'active',
             "domain": 'domain.com',
@@ -96,7 +96,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.first({
+          var assertion = Cookie.new({
             "name": 'substance',
             "value": 'active',
             "domain": 'domain.com',
@@ -378,7 +378,7 @@ describe('Cookie', function() {
     });
   });
 
-  describe('.notSet', function() {
+  describe('.not', function() {
     it('asserts true if cookie is NOT set', function(done) {
       var secret = 'secret';
 
@@ -394,7 +394,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.notSet({"substance": 'active'});
+          var assertion = Cookie.not({"substance": 'active'});
 
           should(function() {
             assertion(res);
@@ -419,7 +419,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.notSet({'substance': 'active'});
+          var assertion = Cookie.not({'substance': 'active'});
 
           should(function() {
             assertion(res);
