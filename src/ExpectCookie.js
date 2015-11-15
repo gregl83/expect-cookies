@@ -1,3 +1,6 @@
+var Cookie = require('cookie');
+var Signature = require('cookie-signature');
+
 /**
  * Construct cookie assertion (function)
  *
@@ -20,8 +23,49 @@ function ExpectCookie(options, assertions) {
 
   // todo add assertions for provided options
 
+  // todo decide how to handle signatures (options, etc)
+
   function assertion(res) {
-    // todo loop over assertions and return if error
+    if ('object' !== typeof res) throw new Error('invalid res argument');
+
+    // build assertions request object
+    var request = {
+      headers: res.req._headers,
+      cookies: {}
+    };
+
+    if (request.headers.cookie) request.cookies = Cookie.parse(request.headers.cookie);
+
+    // build assertions response object
+    var response = {
+      headers: res.headers,
+      cookies: {}
+    };
+
+    if (Array.isArray(response.headers['set-cookie']) && 0 < response.headers['set-cookie'].length) {
+      response.headers['set-cookie'].forEach(function(val) {
+        var cookie = Cookie.parse(val);
+
+        var properties = Object.keys(cookie);
+        var name = properties.shift();
+
+        response.cookies[name] = {
+          name: name,
+          value: cookie[name]
+        };
+        properties.forEach(function(prop) {
+          response.cookies[name][prop.toLowerCase()] = cookie[prop];
+        });
+      });
+    }
+
+    // run assertions
+    var result = undefined;
+    assertions.every(function(assertion) {
+      return ('string' !== typeof (result = assertion(request, response)));
+    });
+
+    return result;
   }
 
   return assertion;
