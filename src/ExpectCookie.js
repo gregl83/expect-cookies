@@ -12,7 +12,7 @@ var Signature = require('cookie-signature');
  * @param {number} [expects.options.max-age]
  * @param {boolean} [expects.options.secure]
  * @param {boolean} [expects.options.httponly]
- * @param {string} [expects.options.signed] secret to check against value
+ * @param {boolean} [expects.options.signed]
  * @param {function(req, res)[]} [asserts] ran within returned assertion function
  * @throws {error}
  * @returns {function} assertion
@@ -23,11 +23,11 @@ function ExpectCookie(expects, asserts) {
 
   if (!Array.isArray(asserts)) asserts = [];
 
-  // todo add assertions for provided options
-
-  // todo decide how to handle signatures (options, etc)
-
-  // FIXME consider making cookie options the same as a parsed cookie!
+  asserts.push(function(req, res) {
+    console.log(req);
+    console.log(res);
+    // todo write common assertions ==
+  });
 
   function assertion(res) {
     if ('object' !== typeof res) throw new Error('res argument must be object');
@@ -52,8 +52,6 @@ function ExpectCookie(expects, asserts) {
         response.cookies.push(ExpectCookie.parse(val));
       });
     }
-
-    console.log(request, response);
 
     // run assertions
     var result = undefined;

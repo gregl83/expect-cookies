@@ -5,16 +5,17 @@ var should = require('should');
 
 var Cookie = require('../');
 
+var secrets = ['one', 'a', 'two', 'b'];
+
 
 describe('Cookie', function() {
   describe('.new', function() {
     it('asserts true if cookie is set and was NOT already set', function(done) {
       var expires = new Date();
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "max-age": 60, secure: 1, httpOnly: true, signed: true});
@@ -34,7 +35,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           });
 
@@ -47,11 +48,10 @@ describe('Cookie', function() {
 
     it('asserts false if cookie is set but was already set', function(done) {
       var expires = new Date();
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "max-age": 60, secure: 1, httpOnly: true, signed: true});
@@ -71,7 +71,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           });
 
@@ -84,11 +84,10 @@ describe('Cookie', function() {
 
     it('asserts false if cookie is NOT set', function(done) {
       var expires = new Date();
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.send();
@@ -107,7 +106,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           });
 
@@ -122,11 +121,10 @@ describe('Cookie', function() {
   describe('.reset', function() {
     it('asserts true if cookie is set and was already set', function(done) {
       var expires = new Date();
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "max-age": 60, secure: 1, httpOnly: true, signed: true});
@@ -146,7 +144,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           });
 
@@ -159,11 +157,10 @@ describe('Cookie', function() {
 
     it('asserts false if cookie is NOT set', function(done) {
       var expires = new Date();
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.send();
@@ -182,7 +179,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           });
 
@@ -198,11 +195,10 @@ describe('Cookie', function() {
     it('asserts true if cookie expiration is greater than already set cookie', function(done) {
       var compareExpires = new Date();
       var expires = new Date(compareExpires + 60000);
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
@@ -221,7 +217,7 @@ describe('Cookie', function() {
               "expires": expires.toUTCString(),
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           }, {
             "options": {
@@ -239,11 +235,10 @@ describe('Cookie', function() {
     it('asserts false if cookie expiration is less than or equal to already set cookie', function(done) {
       var compareExpires = new Date();
       var expires = new Date(compareExpires - 60000);
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
@@ -262,7 +257,7 @@ describe('Cookie', function() {
               "expires": expires.toUTCString(),
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           }, {
             "options": {
@@ -278,11 +273,9 @@ describe('Cookie', function() {
     });
 
     it('asserts true if cookie max-age is greater than already set cookie', function(done) {
-      var secret = 'secret';
-
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', "max-age": 120, secure: 1, httpOnly: true, signed: true});
@@ -301,7 +294,7 @@ describe('Cookie', function() {
               "max-age": 120,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           }, {
             "options": {
@@ -317,11 +310,9 @@ describe('Cookie', function() {
     });
 
     it('asserts false if cookie max-age is less than or equal to already set cookie', function(done) {
-      var secret = 'secret';
-
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', "max-age": 60, secure: 1, httpOnly: true, signed: true});
@@ -340,7 +331,7 @@ describe('Cookie', function() {
               "max-age": 60,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           }, {
             "options": {
@@ -358,11 +349,10 @@ describe('Cookie', function() {
     it('asserts false if cookie is NOT set', function(done) {
       var compareExpires = new Date();
       var expires = new Date(compareExpires - 60000);
-      var secret = 'secret';
 
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.send();
@@ -381,7 +371,7 @@ describe('Cookie', function() {
               "max-age": 120,
               "secure": true,
               "httponly": true,
-              "signed": secret
+              "signed": true
             }
           }, {
             "options": {
@@ -400,11 +390,9 @@ describe('Cookie', function() {
 
   describe('.not', function() {
     it('asserts true if cookie is NOT set', function(done) {
-      var secret = 'secret';
-
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.send();
@@ -414,7 +402,9 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.not({"substance": 'active'});
+          var assertion = Cookie.not({
+            "substance": 'active'
+          });
 
           should(function() {
             assertion(res);
@@ -424,11 +414,9 @@ describe('Cookie', function() {
     });
 
     it('asserts false if cookie IS set', function(done) {
-      var secret = 'secret';
-
       var app = express();
 
-      app.use(cookieParser(secret, {signed: true}));
+      app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
         res.cookie('substance', 'active', {domain: 'domain.com', path: '/', "max-age": 60, secure: 1, httpOnly: true, signed: true});
@@ -439,7 +427,9 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.not({'substance': 'active'});
+          var assertion = Cookie.not({
+            'substance': 'active'
+          });
 
           should(function() {
             assertion(res);
