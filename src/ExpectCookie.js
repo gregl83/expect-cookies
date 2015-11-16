@@ -85,7 +85,7 @@ function ExpectCookie(expects, asserts) {
  * @returns {function}
  */
 ExpectCookie.new = function(expects, asserts) {
-  if ('object' === typeof expects) expects = [expects];
+  if (!Array.isArray(expects)) expects = [expects];
 
   if (!Array.isArray(asserts)) asserts = [];
 
@@ -103,7 +103,7 @@ ExpectCookie.new = function(expects, asserts) {
  * @returns {function}
  */
 ExpectCookie.not = function(expects, asserts) {
-  if ('object' === typeof expects) expects = [expects];
+  if (!Array.isArray(expects)) expects = [expects];
 
   if (!Array.isArray(asserts)) asserts = [];
 
@@ -122,9 +122,9 @@ ExpectCookie.not = function(expects, asserts) {
  * @returns {function}
  */
 ExpectCookie.reset = function(expects, compares, asserts) {
-  if ('object' === typeof expects) expects = [expects];
+  if (!Array.isArray(expects)) expects = [expects];
 
-  if ('object' === typeof compares) compares = [compares];
+  if (!Array.isArray(compares)) compares = [compares];
 
   if (!Array.isArray(asserts)) asserts = [];
 
@@ -143,9 +143,9 @@ ExpectCookie.reset = function(expects, compares, asserts) {
  * @returns {function}
  */
 ExpectCookie.renew = function(expects, compares, asserts) {
-  if ('object' === typeof expects) expects = [expects];
+  if (!Array.isArray(expects)) expects = [expects];
 
-  if ('object' === typeof compares) compares = [compares];
+  if (!Array.isArray(compares)) compares = [compares];
 
   if (!Array.isArray(asserts)) asserts = [];
 
