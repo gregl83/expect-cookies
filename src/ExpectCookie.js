@@ -4,7 +4,7 @@ var Signature = require('cookie-signature');
 /**
  * Construct cookie assertion (function)
  *
- * @param {object[]} expects cookies
+ * @param {object|object[]} expects cookies
  * @param {string} expects.<name> and value of cookie
  * @param {object} expects.options
  * @param {string} [expects.options.domain]
@@ -20,7 +20,7 @@ var Signature = require('cookie-signature');
  * @constructor
  */
 function ExpectCookie(expects, asserts) {
-  if (!Array.isArray(expects)) throw new Error('expects argument must be array');
+  if (!Array.isArray(expects)) expects = [expects];
 
   if (!Array.isArray(asserts)) asserts = [];
 
@@ -80,11 +80,13 @@ function ExpectCookie(expects, asserts) {
 /**
  * Assert cookie is set and new
  *
- * @param {object[]} expects cookies
+ * @param {object|object[]} expects cookies
  * @param {function(req, res)[]} asserts
  * @returns {function}
  */
 ExpectCookie.new = function(expects, asserts) {
+  if ('object' === typeof expects) expects = [expects];
+
   if (!Array.isArray(asserts)) asserts = [];
 
   // todo add new assertion
@@ -96,11 +98,13 @@ ExpectCookie.new = function(expects, asserts) {
 /**
  * Assert cookie is NOT set
  *
- * @param {object[]} expects cookies
+ * @param {object|object[]} expects cookies
  * @param {function(req, res)[]} asserts
  * @returns {function}
  */
 ExpectCookie.not = function(expects, asserts) {
+  if ('object' === typeof expects) expects = [expects];
+
   if (!Array.isArray(asserts)) asserts = [];
 
   // todo add not assertion
@@ -112,12 +116,16 @@ ExpectCookie.not = function(expects, asserts) {
 /**
  * Assert cookie has been reset
  *
- * @param {object[]} expects cookies
- * @param {object[]} compares cookies
+ * @param {object|object[]} expects cookies
+ * @param {object|object[]} compares cookies
  * @param {function(req, res)[]} asserts
  * @returns {function}
  */
 ExpectCookie.reset = function(expects, compares, asserts) {
+  if ('object' === typeof expects) expects = [expects];
+
+  if ('object' === typeof compares) compares = [compares];
+
   if (!Array.isArray(asserts)) asserts = [];
 
   // todo add reset assertion
@@ -129,12 +137,16 @@ ExpectCookie.reset = function(expects, compares, asserts) {
 /**
  * Assert cookie expires or max-age has increased
  *
- * @param {object[]} expects cookies
- * @param {object[]} compares cookies
+ * @param {object|object[]} expects cookies
+ * @param {object|object[]} compares cookies
  * @param {function(req, res)[]} asserts
  * @returns {function}
  */
 ExpectCookie.renew = function(expects, compares, asserts) {
+  if ('object' === typeof expects) expects = [expects];
+
+  if ('object' === typeof compares) compares = [compares];
+
   if (!Array.isArray(asserts)) asserts = [];
 
   // todo add renew assertion
