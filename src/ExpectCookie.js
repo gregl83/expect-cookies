@@ -1,4 +1,3 @@
-var Cookie = require('cookie');
 var Signature = require('cookie-signature');
 
 /**
@@ -28,8 +27,6 @@ function ExpectCookie(expects, asserts) {
 
   // todo decide how to handle signatures (options, etc)
 
-  // todo cookie should be array for cookies
-
   // FIXME consider making cookie options the same as a parsed cookie!
 
   function assertion(res) {
@@ -38,31 +35,25 @@ function ExpectCookie(expects, asserts) {
     // request and response object initialization
     var request = {
       headers: res.req._headers,
-      cookies: {}
+      cookies: []
     };
 
     var response = {
       headers: res.headers,
-      cookies: {}
+      cookies: []
     };
 
     // build assertions request object
-    if (request.headers.cookie) request.cookies = Cookie.parse(request.headers.cookie);
+    if (request.headers.cookie) request.cookies.push(ExpectCookie.parse(request.headers.cookie));
 
     // build assertions response object
     if (Array.isArray(response.headers['set-cookie']) && 0 < response.headers['set-cookie'].length) {
       response.headers['set-cookie'].forEach(function(val) {
-        var cookie = Cookie.parse(val);
-        // fixme custom cookie parsing
-        var properties = Object.keys(cookie);
-        var name = properties[0];
-
-        response.cookies[name] = {};
-        properties.forEach(function(prop) {
-          response.cookies[name][prop.toLowerCase()] = cookie[prop];
-        });
+        response.cookies.push(ExpectCookie.parse(val));
       });
     }
+
+    console.log(request, response);
 
     // run assertions
     var result = undefined;
@@ -75,6 +66,56 @@ function ExpectCookie(expects, asserts) {
 
   return assertion;
 }
+
+
+/**
+ * Parse cookie string
+ *
+ * @param {string} str
+ * @param {object} [options]
+ * @param {function} [options.decode] uri
+ * @returns {object}
+ */
+ExpectCookie.parse = function(str, options) {
+  if ('string' !== typeof str) throw new TypeError('argument str must be a string');
+
+  if ('object' !== typeof options) options = {};
+
+  var decode = options.decode || decodeURIComponent;
+
+  var parts = str.split(/; */);
+
+  var cookie = {};
+
+  parts.forEach(function(part, i) {
+    if (1 === i) cookie.options = {};
+    var cookieRef = (0 === i) ? cookie : cookie.options;
+
+    var equalsIndex = part.indexOf('=');
+
+    // things that don't look like key=value get true flag
+    if (equalsIndex < 0) {
+      cookieRef[part.trim()] = true;
+      return;
+    }
+
+    var key = part.substr(0, equalsIndex).trim();
+    // only assign once
+    if ('undefined' !== typeof cookie[key]) return;
+
+    var val = part.substr(++equalsIndex, part.length).trim();
+    // quoted values
+    if ('"' == val[0]) val = val.slice(1, -1);
+
+    try {
+      cookieRef[key] = decode(val);
+    } catch (e) {
+      cookieRef[key] = val;
+    }
+  });
+
+  return cookie;
+};
 
 
 /**
