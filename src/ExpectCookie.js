@@ -24,8 +24,8 @@ function ExpectCookie(expects, asserts) {
   if (!Array.isArray(asserts)) asserts = [];
 
   asserts.push(function(req, res) {
-    console.log(req);
-    console.log(res);
+    console.log(expects);
+    console.log(res.cookies);
     // todo write common assertions ==
   });
 
@@ -93,11 +93,11 @@ ExpectCookie.parse = function(str, options) {
 
     // things that don't look like key=value get true flag
     if (equalsIndex < 0) {
-      cookieRef[part.trim()] = true;
+      cookieRef[part.trim().toLowerCase()] = true;
       return;
     }
 
-    var key = part.substr(0, equalsIndex).trim();
+    var key = part.substr(0, equalsIndex).trim().toLowerCase();
     // only assign once
     if ('undefined' !== typeof cookie[key]) return;
 
@@ -111,6 +111,8 @@ ExpectCookie.parse = function(str, options) {
       cookieRef[key] = val;
     }
   });
+
+  if ('undefined' === typeof cookie.options) cookie.options = {};
 
   return cookie;
 };
