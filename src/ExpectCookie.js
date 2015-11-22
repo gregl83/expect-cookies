@@ -9,11 +9,7 @@ var Assertion = require('./Assertion');
  * @constructor
  */
 function ExpectCookie(asserts) {
-  var assertion = Assertion();
-
-  // todo push asserts to assertions
-
-  return assertion;
+  return Assertion(asserts);
 }
 
 

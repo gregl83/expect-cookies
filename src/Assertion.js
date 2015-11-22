@@ -1,20 +1,24 @@
 var Signature = require('cookie-signature');
 
-/*
- * @param {object|object[]} expects cookies
- * @param {string} expects.<name> and value of cookie
- * @param {object} expects.options
- * @param {string} [expects.options.domain]
- * @param {string} [expects.options.path]
- * @param {string} [expects.options.expires] UTC string using date.toUTCString()
- * @param {number} [expects.options.max-age]
- * @param {boolean} [expects.options.secure]
- * @param {boolean} [expects.options.httponly]
- * @param {boolean} [expects.options.signed]
+/**
+ * Build Assertion function
+ *
+ * {object|object[]} expects cookies
+ * {string} expects.<name> and value of cookie
+ * {object} expects.options
+ * {string} [expects.options.domain]
+ * {string} [expects.options.path]
+ * {string} [expects.options.expires] UTC string using date.toUTCString()
+ * {number} [expects.options.max-age]
+ * {boolean} [expects.options.secure]
+ * {boolean} [expects.options.httponly]
+ * {boolean} [expects.options.signed]
+ *
+ * @param {function[]} [asserts]
+ * @returns {Assertion}
  */
-
-module.exports = function() {
-  var assertions = [];
+module.exports = function(asserts) {
+  var assertions = (Array.isArray(asserts)) ? asserts : [];
 
   function Assertion(res) {
     if ('object' !== typeof res) throw new Error('res argument must be object');
