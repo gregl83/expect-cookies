@@ -38,7 +38,8 @@
     "istanbul": "0.3.x"
   },
   "dependencies": {
-    "cookie-signature": "1.0.x"
+    "cookie-signature": "1.0.x",
+    "should": "7.1.x"
   },
   "license": "MIT"
 }

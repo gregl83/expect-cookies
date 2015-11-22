@@ -220,6 +220,7 @@ describe('Cookie', function() {
               "signed": true
             }
           }, {
+            "substance": 'active',
             "options": {
               "expires": compareExpires.toUTCString()
             }
