@@ -1,5 +1,6 @@
 var Signature = require('cookie-signature');
 
+
 /**
  * Build Assertion function
  *
@@ -14,11 +15,14 @@ var Signature = require('cookie-signature');
  * {boolean} [expects.options.httponly]
  * {boolean} [expects.options.signed]
  *
- * @param {function[]} [asserts]
+ * @param {function|function[]} [asserts]
  * @returns {Assertion}
  */
 module.exports = function(asserts) {
-  var assertions = (Array.isArray(asserts)) ? asserts : [];
+  var assertions = [];
+
+  if (Array.isArray(asserts)) assertions = asserts;
+  else if ('function' === typeof asserts) assertions.push(asserts);
 
   function Assertion(res) {
     if ('object' !== typeof res) throw new Error('res argument must be object');

@@ -4,7 +4,6 @@ var Assertion = require('./Assertion');
  * Construct cookie assertion (function)
  *
  * @param {function(req, res)[]} asserts ran within returned assertion function
- * @throws {error}
  * @returns {function} assertion
  * @constructor
  */
