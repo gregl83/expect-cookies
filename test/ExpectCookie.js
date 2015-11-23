@@ -35,7 +35,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -54,7 +54,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1});
         res.send();
       });
 
@@ -70,14 +70,13 @@ describe('Cookie', function() {
               "expires": expires.toUTCString(),
               "max-age": 60000,
               "secure": true,
-              "httponly": true,
-              "signed": true
+              "httponly": true
             }
           });
 
           should(function() {
             assertion(res);
-          }).not.throw();
+          }).throw();
         })
         .end(done);
     });
@@ -109,7 +108,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -144,7 +143,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -182,7 +181,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -218,7 +217,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -253,7 +252,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -291,7 +290,7 @@ describe('Cookie', function() {
               "expires": expires.toUTCString(),
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           }, {
             "substance": 'active',
@@ -332,7 +331,7 @@ describe('Cookie', function() {
               "expires": expires.toUTCString(),
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           }, {
             "options": {
@@ -369,7 +368,7 @@ describe('Cookie', function() {
               "max-age": 120000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           }, {
             "options": {
@@ -406,7 +405,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           }, {
             "options": {
@@ -446,7 +445,7 @@ describe('Cookie', function() {
               "max-age": 120000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           }, {
             "options": {
@@ -480,7 +479,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.not({
+          var assertion = Cookie.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -489,7 +488,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -516,7 +515,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.not({
+          var assertion = Cookie.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -525,7 +524,7 @@ describe('Cookie', function() {
               "max-age": 90000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -551,7 +550,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.not({
+          var assertion = Cookie.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -560,7 +559,7 @@ describe('Cookie', function() {
               "max-age": 60000,
               "secure": true,
               "httponly": true,
-              "signed": true
+              "secret": secrets
             }
           });
 
@@ -587,7 +586,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.set({
+            var assertion = Cookie.not('set', {
               "substance": 'active'
             });
 
@@ -615,7 +614,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.reset({
+            var assertion = Cookie.not('reset', {
               "substance": 'active',
               "options": {
                 "domain": 'domain.com',
@@ -624,7 +623,7 @@ describe('Cookie', function() {
                 "max-age": 60000,
                 "secure": true,
                 "httponly": true,
-                "signed": true
+                "secret": secrets
               }
             });
 
@@ -653,7 +652,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.new({
+            var assertion = Cookie.not('new', {
               "substance": 'active',
               "options": {
                 "domain": 'domain.com',
@@ -662,7 +661,7 @@ describe('Cookie', function() {
                 "max-age": 60000,
                 "secure": true,
                 "httponly": true,
-                "signed": true
+                "secret": secrets
               }
             });
 
@@ -691,7 +690,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.renew({
+            var assertion = Cookie.not('renew', {
               "substance": 'active',
               "options": {
                 "domain": 'domain.com',
@@ -699,7 +698,7 @@ describe('Cookie', function() {
                 "expires": expires.toUTCString(),
                 "secure": true,
                 "httponly": true,
-                "signed": true
+                "secret": secrets
               }
             }, {
               "substance": 'active',
@@ -733,10 +732,10 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not({
+            var assertion = Cookie.not('contain', {
               "substance": 'active',
               "options": {
-                "signed": true
+                "secret": secrets
               }
             });
 

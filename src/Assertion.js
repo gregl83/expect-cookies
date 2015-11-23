@@ -1,5 +1,5 @@
 var Signature = require('cookie-signature');
-
+var should = require('should');
 
 /**
  * Build Assertion function
@@ -13,7 +13,7 @@ var Signature = require('cookie-signature');
  * {number} [expects.options.max-age]
  * {boolean} [expects.options.secure]
  * {boolean} [expects.options.httponly]
- * {boolean} [expects.options.signed]
+ * {string|string[]} [expects.options.secret]
  *
  * @param {function|function[]} [asserts]
  * @returns {Assertion}
@@ -139,6 +139,28 @@ module.exports = function(asserts) {
 
 
   /**
+   * Iterate expects
+   *
+   * @param {object|object[]} expects
+   * @param {function} cb
+   */
+  Assertion.expects = function(expects, cb) {
+    if (!Array.isArray(expects)) expects = [expects];
+
+    expects.forEach(function(expect) {
+      var secret;
+
+      if ('string' === typeof expect.options.secret) secret = [expect.options.secret];
+      else if (Array.isArray(expect.options.secret)) secret = expect.options.secret;
+
+      delete expect.options.secret;
+
+      cb(expect, secret);
+    });
+  };
+
+
+  /**
    * Assert cookie and options are set
    *
    * @param {object|object[]} expects cookies
@@ -146,9 +168,22 @@ module.exports = function(asserts) {
    * @returns {function} Assertion
    */
   Assertion.set = function(expects, assert) {
-    if (!Array.isArray(expects)) expects = [expects];
+    if ('undefined' === typeof assert) assert = true;
 
-    // todo
+    Assertion.expects(expects, function(expect, secret) {
+      var name = Object.keys(expect)[0];
+      var keys = Object.keys(expect.options);
+
+      assertions.push(function(req, res) {
+        // get expectation cookie
+        var cookie = Assertion.find(name, res.cookies);
+
+        if (!cookie && assert) throw new Error('expected: ' + name + ' cookie to be set');
+
+        if (assert) should(cookie.options).have.properties(keys);
+        else should(cookie.options).not.have.properties(keys);
+      });
+    });
 
     return Assertion;
   };
@@ -262,9 +297,9 @@ module.exports = function(asserts) {
 
     for(var i=1; i<arguments.length; ++i) args.push(arguments[i]);
 
-    arguments.push(false);
+    args.push(false);
 
-    return Assertion[method].apply(arguments);
+    return Assertion[method].apply(args);
   };
 
 

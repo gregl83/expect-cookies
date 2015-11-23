@@ -19,7 +19,8 @@ var methods = Object.getOwnPropertyNames(assertion);
 methods.forEach(function(method) {
   if ('function' === typeof assertion[method] && 'undefined' === typeof Function[method]) {
     ExpectCookie[method] = function() {
-      return Assertion()[method].apply(arguments);
+      var assertion = Assertion();
+      return assertion[method].apply(assertion, arguments);
     };
   }
 });
