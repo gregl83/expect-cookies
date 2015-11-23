@@ -24,6 +24,14 @@ module.exports = function(asserts) {
   if (Array.isArray(asserts)) assertions = asserts;
   else if ('function' === typeof asserts) assertions.push(asserts);
 
+
+  /**
+   * Assertion function with static chainable methods
+   *
+   * @param {object} res
+   * @returns {undefined|string}
+   * @constructor
+   */
   function Assertion(res) {
     if ('object' !== typeof res) throw new Error('res argument must be object');
 
@@ -56,6 +64,7 @@ module.exports = function(asserts) {
 
     return result;
   }
+
 
   /**
    * Find cookie in stack/array
@@ -133,10 +142,83 @@ module.exports = function(asserts) {
    * Assert cookie and options are set
    *
    * @param {object|object[]} expects cookies
+   * @param {undefined|boolean} [assert]
    * @returns {function} Assertion
    */
-  Assertion.set = function(expects) {
+  Assertion.set = function(expects, assert) {
     if (!Array.isArray(expects)) expects = [expects];
+
+    // todo
+
+    return Assertion;
+  };
+
+
+  /**
+   * Assert cookie has been reset
+   *
+   * @param {object|object[]} expects cookies
+   * @param {object|object[]} compares cookies
+   * @param {undefined|boolean} [assert]
+   * @returns {function} Assertion
+   */
+  Assertion.reset = function(expects, compares, assert) {
+    if (!Array.isArray(expects)) expects = [expects];
+
+    if (!Array.isArray(compares)) compares = [compares];
+
+    // todo add reset assertion
+
+    return Assertion;
+  };
+
+
+  /**
+   * Assert cookie is set and new
+   *
+   * @param {object|object[]} expects cookies
+   * @param {undefined|boolean} [assert]
+   * @returns {function} Assertion
+   */
+  Assertion.new = function(expects, assert) {
+    if (!Array.isArray(expects)) expects = [expects];
+
+    // todo add new assertion
+
+    return Assertion;
+  };
+
+
+  /**
+   * Assert cookie expires or max-age has increased
+   *
+   * @param {object|object[]} expects cookies
+   * @param {object|object[]} compares cookies
+   * @param {undefined|boolean} [assert]
+   * @returns {function} Assertion
+   */
+  Assertion.renew = function(expects, compares, assert) {
+    if (!Array.isArray(expects)) expects = [expects];
+
+    if (!Array.isArray(compares)) compares = [compares];
+
+    // todo add renew assertion
+
+    return Assertion;
+  };
+
+
+  /**
+   * Assert cookie contains values
+   *
+   * @param {object|object[]} expects cookies
+   * @param {undefined|boolean} [assert]
+   * @returns {function} Assertion
+   */
+  Assertion.contain = function(expects, assert) {
+    if (!Array.isArray(expects)) expects = [expects];
+
+    // todo add not assertion
 
     // assert expectations match cookies
     assertions.push(function(req, res) {
@@ -164,73 +246,25 @@ module.exports = function(asserts) {
       console.log(res.cookies);
     });
 
-    return Assertion;
-  };
-
-
-  /**
-   * Assert cookie or options are NOT set
-   *
-   * @param {object|object[]} expects cookies
-   * @returns {function} Assertion
-   */
-  Assertion.not = function(expects) {
-    if (!Array.isArray(expects)) expects = [expects];
-
-    // todo add not assertion
 
     return Assertion;
   };
 
 
   /**
-   * Assert cookie is set and new
+   * Not assert modifier
    *
-   * @param {object|object[]} expects cookies
-   * @returns {function} Assertion
+   * @param {function} method
+   * @param {...*}
    */
-  Assertion.new = function(expects) {
-    if (!Array.isArray(expects)) expects = [expects];
+  Assertion.not = function(method) {
+    var args = [];
 
-    // todo add new assertion
+    for(var i=1; i<arguments.length; ++i) args.push(arguments[i]);
 
-    return Assertion;
-  };
+    arguments.push(false);
 
-
-  /**
-   * Assert cookie has been reset
-   *
-   * @param {object|object[]} expects cookies
-   * @param {object|object[]} compares cookies
-   * @returns {function} Assertion
-   */
-  Assertion.reset = function(expects, compares) {
-    if (!Array.isArray(expects)) expects = [expects];
-
-    if (!Array.isArray(compares)) compares = [compares];
-
-    // todo add reset assertion
-
-    return Assertion;
-  };
-
-
-  /**
-   * Assert cookie expires or max-age has increased
-   *
-   * @param {object|object[]} expects cookies
-   * @param {object|object[]} compares cookies
-   * @returns {function} Assertion
-   */
-  Assertion.renew = function(expects, compares) {
-    if (!Array.isArray(expects)) expects = [expects];
-
-    if (!Array.isArray(compares)) compares = [compares];
-
-    // todo add renew assertion
-
-    return Assertion;
+    return Assertion[method].apply(arguments);
   };
 
 
