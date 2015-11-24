@@ -260,16 +260,42 @@ module.exports = function(asserts) {
    * Assert cookie expires or max-age has increased
    *
    * @param {object|object[]} expects cookies
-   * @param {object|object[]} compares cookies
    * @param {undefined|boolean} [assert]
    * @returns {function} Assertion
    */
-  Assertion.renew = function(expects, compares, assert) {
-    if (!Array.isArray(expects)) expects = [expects];
+  Assertion.renew = function(expects, assert) {
+    if ('undefined' === typeof assert) assert = true;
 
-    if (!Array.isArray(compares)) compares = [compares];
+    Assertion.expects(expects, function(expect, secret) {
+      var name = Object.keys(expect)[0];
 
-    // todo add renew assertion
+      var expectExpires = new Date(expect.options.expires);
+      var expectMaxAge = parseInt(expect.options['max-age']);
+
+      if (!expectExpires.getTime() && !expectMaxAge) throw new Error('expected: ' + name + ' expects to have expires or max-age option');
+
+      assertions.push(function(req, res) {
+        // get sent cookie
+        var cookieReq = Assertion.find(name, req.cookies);
+        // get expectation cookie
+        var cookieRes = Assertion.find(name, res.cookies);
+
+        var cookieMaxAge = (expectMaxAge && cookieRes) ? parseInt(cookieRes.options['max-age']) : undefined;
+        var cookieExpires = (expectExpires.getTime() && cookieRes) ? new Date(cookieRes.options.expires) : undefined;
+
+        if (assert) {
+          if (!cookieReq || !cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+
+          if (expectMaxAge && (!cookieMaxAge || cookieMaxAge <= expectMaxAge)) throw new Error('expected: ' + name + ' cookie max-age to be greater than existing value');
+
+          if (expectExpires.getTime() && (!cookieExpires.getTime() || cookieExpires <= expectExpires)) throw new Error('expected: ' + name + ' cookie expires to be greater than existing value');
+        } else if (cookieRes) {
+          if (expectMaxAge && cookieMaxAge > expectMaxAge) throw new Error('expected: ' + name + ' cookie max-age to be less than or equal to existing value');
+
+          if (expectExpires.getTime() && cookieExpires > expectExpires) throw new Error('expected: ' + name + ' cookie expires to be less than or equal to existing value');
+        }
+      });
+    });
 
     return Assertion;
   };

@@ -32,7 +32,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60000,
+              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -68,7 +68,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60000,
+              "max-age": 60,
               "secure": true,
               "httponly": true
             }
@@ -215,15 +215,15 @@ describe('Cookie', function() {
 
   describe('.renew', function() {
     it('asserts true if cookie expiration is greater than already set cookie', function(done) {
-      var compareExpires = new Date();
-      var expires = new Date(compareExpires + 60000);
+      var expires = new Date();
+      var expiresRenewed = new Date(expires.getTime() + 60000);
 
       var app = express();
 
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expiresRenewed, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -234,17 +234,7 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "expires": expires.toUTCString(),
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
-          }, {
-            "substance": 'active',
-            "options": {
-              "expires": compareExpires.toUTCString()
+              "expires": expires.toUTCString()
             }
           });
 
@@ -256,15 +246,15 @@ describe('Cookie', function() {
     });
 
     it('asserts false if cookie expiration is less than or equal to already set cookie', function(done) {
-      var compareExpires = new Date();
-      var expires = new Date(compareExpires - 60000);
+      var expires = new Date();
+      var expiresRenewed = new Date(expires.getTime() - 60000);
 
       var app = express();
 
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expiresRenewed, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -275,16 +265,7 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "expires": expires.toUTCString(),
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
-          }, {
-            "options": {
-              "expires": compareExpires.toUTCString()
+              "expires": expires.toUTCString()
             }
           });
 
@@ -312,16 +293,7 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "max-age": 120000,
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
-          }, {
-            "options": {
-              "max-age": 60000
+              "max-age": 60
             }
           });
 
@@ -349,16 +321,7 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "max-age": 60000,
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
-          }, {
-            "options": {
-              "max-age": 120000
+              "max-age": 120
             }
           });
 
@@ -370,8 +333,7 @@ describe('Cookie', function() {
     });
 
     it('asserts false if cookie is NOT set', function(done) {
-      var compareExpires = new Date();
-      var expires = new Date(compareExpires - 60000);
+      var expires = new Date();
 
       var app = express();
 
@@ -388,18 +350,8 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "domain": 'domain.com',
-              "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 120000,
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
-          }, {
-            "options": {
-              "expires": compareExpires.toUTCString(),
-              "max-age": 60000
+              "max-age": 60
             }
           });
 
@@ -434,7 +386,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60000,
+              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -470,7 +422,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 90000,
+              "max-age": 90,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -505,7 +457,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60000,
+              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -605,7 +557,7 @@ describe('Cookie', function() {
     });
 
     describe('.renew', function() {
-      it('asserts true if cookie expiration is same than already set cookie', function(done) {
+      it('asserts true if cookie expiration is same as already set cookie', function(done) {
         var expires = new Date();
 
         var app = express();
@@ -622,16 +574,6 @@ describe('Cookie', function() {
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
             var assertion = Cookie.not('renew', {
-              "substance": 'active',
-              "options": {
-                "domain": 'domain.com',
-                "path": '/',
-                "expires": expires.toUTCString(),
-                "secure": true,
-                "httponly": true,
-                "secret": secrets
-              }
-            }, {
               "substance": 'active',
               "options": {
                 "expires": expires.toUTCString()
