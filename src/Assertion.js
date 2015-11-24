@@ -161,6 +161,7 @@ module.exports = function(asserts) {
 
         delete expect.options.secret;
       }
+      else expect.options = {};
 
       cb(expect, secret);
     });
@@ -185,10 +186,10 @@ module.exports = function(asserts) {
         // get expectation cookie
         var cookie = Assertion.find(name, res.cookies);
 
-        if (!cookie && assert) throw new Error('expected: ' + name + ' cookie to be set');
+        if (assert && !cookie) throw new Error('expected: ' + name + ' cookie to be set');
 
         if (assert) should(cookie.options).have.properties(keys);
-        else should(cookie.options).not.have.properties(keys);
+        else if(cookie) should(cookie.options).not.have.properties(keys);
       });
     });
 
@@ -247,7 +248,7 @@ module.exports = function(asserts) {
           if (!cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
           if (cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to NOT already be set');
         }
-        else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+        else if (!cookieReq || !cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
       });
     });
 
@@ -330,7 +331,7 @@ module.exports = function(asserts) {
 
     args.push(false);
 
-    return Assertion[method].apply(args);
+    return Assertion[method].apply(Assertion, args);
   };
 
 

@@ -564,16 +564,7 @@ describe('Cookie', function() {
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
             var assertion = Cookie.not('reset', {
-              "substance": 'active',
-              "options": {
-                "domain": 'domain.com',
-                "path": '/',
-                "expires": expires.toUTCString(),
-                "max-age": 60000,
-                "secure": true,
-                "httponly": true,
-                "secret": secrets
-              }
+              "substance": 'active'
             });
 
             should(function() {
@@ -602,16 +593,7 @@ describe('Cookie', function() {
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
             var assertion = Cookie.not('new', {
-              "substance": 'active',
-              "options": {
-                "domain": 'domain.com',
-                "path": '/',
-                "expires": expires.toUTCString(),
-                "max-age": 60000,
-                "secure": true,
-                "httponly": true,
-                "secret": secrets
-              }
+              "substance": 'active'
             });
 
             should(function() {
