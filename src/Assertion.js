@@ -232,9 +232,24 @@ module.exports = function(asserts) {
    * @returns {function} Assertion
    */
   Assertion.new = function(expects, assert) {
-    if (!Array.isArray(expects)) expects = [expects];
+    if ('undefined' === typeof assert) assert = true;
 
-    // todo add new assertion
+    Assertion.expects(expects, function(expect, secret) {
+      var name = Object.keys(expect)[0];
+
+      assertions.push(function(req, res) {
+        // get sent cookie
+        var cookieReq = Assertion.find(name, req.cookies);
+        // get expectation cookie
+        var cookieRes = Assertion.find(name, res.cookies);
+
+        if (assert) {
+          if (!cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+          if (cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to NOT already be set');
+        }
+        else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+      });
+    });
 
     return Assertion;
   };
