@@ -1,4 +1,4 @@
-var Signature = require('cookie-signature');
+var signature = require('cookie-signature');
 var should = require('should');
 
 /**
@@ -309,36 +309,42 @@ module.exports = function(asserts) {
    * @returns {function} Assertion
    */
   Assertion.contain = function(expects, assert) {
-    if (!Array.isArray(expects)) expects = [expects];
+    if ('undefined' === typeof assert) assert = true;
 
-    // todo add not assertion
+    Assertion.expects(expects, function(expect, secret) {
+      var name = Object.keys(expect)[0];
+      var keys = Object.keys(expect.options);
 
-    // assert expectations match cookies
-    assertions.push(function(req, res) {
-      expects.forEach(function(expect) {
-        var name = Object.keys(expect)[0];
-        var keys = Object.keys(expect.options);
-
+      assertions.push(function(req, res) {
         // get expectation cookie
-        var cookie = Assertion.find(name, res);
+        var cookie = Assertion.find(name, res.cookies);
 
-        if (!cookie) throw new Error('failed expectation: ' + name + ' cookie was NOT set');
+        if (!cookie) throw new Error('expected: ' + name + ' cookie to be set');
 
         // check cookie values are equal
-        if (keys['signed']) should(expect[name]).be.eql(Assertion.find(name, res)[name]);
-        else should(expect[name]).be.eql(cookie[name]);
+        try {
+          if (assert) should(cookie[name]).be.eql(expect[name]);
+          else should(cookie[name]).not.be.eql(expect[name]);
+        } catch(e) {
+          if (secret.length) {
+            var value;
+            secret.every(function(sec) {
+              value = signature.unsign(cookie[name].slice(2), sec);
+              return !(value && value === expect[name]);
+            });
 
-        if ('undefined' !== keys['signed']) delete keys['signed'];
+            if (assert && !value) throw new Error('expected: ' + name + ' value to equal ' + expect[name]);
+            else if (!assert && value) throw new Error('expected: ' + name + ' value to NOT equal ' + expect[name]);
+          }
+          else throw e;
+        }
 
         keys.forEach(function(key) {
-          should(expect.options[key]).be.eql();
+          if (assert) should(cookie.options[key]).be.eql(expect.options[key]);
+          else should(cookie.options[key]).not.be.eql(expect.options[key]);
         });
       });
-
-      console.log(expects);
-      console.log(res.cookies);
     });
-
 
     return Assertion;
   };

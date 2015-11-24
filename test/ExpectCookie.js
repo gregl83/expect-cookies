@@ -18,7 +18,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -32,7 +32,6 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -54,7 +53,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1});
         res.send();
       });
 
@@ -68,7 +67,6 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60,
               "secure": true,
               "httponly": true
             }
@@ -89,7 +87,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: new Date(), "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: new Date(), secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -142,7 +140,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -169,7 +167,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -350,8 +348,7 @@ describe('Cookie', function() {
           var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
-              "expires": expires.toUTCString(),
-              "max-age": 60
+              "expires": expires.toUTCString()
             }
           });
 
@@ -372,7 +369,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -386,7 +383,6 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -408,7 +404,7 @@ describe('Cookie', function() {
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -422,7 +418,7 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 90,
+              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -457,7 +453,6 @@ describe('Cookie', function() {
               "domain": 'domain.com',
               "path": '/',
               "expires": expires.toUTCString(),
-              "max-age": 60,
               "secure": true,
               "httponly": true,
               "secret": secrets
@@ -536,7 +531,7 @@ describe('Cookie', function() {
         app.use(cookieParser(secrets));
 
         app.get('/', function(req, res) {
-          res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+          res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, secure: 1, httpOnly: true, signed: true});
           res.send();
         });
 
@@ -577,6 +572,34 @@ describe('Cookie', function() {
               "substance": 'active',
               "options": {
                 "expires": expires.toUTCString()
+              }
+            });
+
+            should(function() {
+              assertion(res);
+            }).not.throw();
+          })
+          .end(done);
+      });
+
+      it('asserts true if cookie max-age is same as already set cookie', function(done) {
+        var app = express();
+
+        app.use(cookieParser(secrets));
+
+        app.get('/', function(req, res) {
+          res.cookie('substance', 'active', {domain: 'domain.com', path: '/', maxAge: 60000, secure: 1, httpOnly: true, signed: true});
+          res.send();
+        });
+
+        request(app)
+          .get('/')
+          .set("Cookie", "control=placebo;substance=active")
+          .expect(function(res) {
+            var assertion = Cookie.not('renew', {
+              "substance": 'active',
+              "options": {
+                "max-age": 60
               }
             });
 
