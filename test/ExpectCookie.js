@@ -84,14 +84,12 @@ describe('Cookie', function() {
 
   describe('.reset', function() {
     it('asserts true if cookie is set and was already set', function(done) {
-      var expires = new Date();
-
       var app = express();
 
       app.use(cookieParser(secrets));
 
       app.get('/', function(req, res) {
-        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: expires, "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
+        res.cookie('substance', 'active', {domain: 'domain.com', path: '/', expires: new Date(), "maxAge": 60000, secure: 1, httpOnly: true, signed: true});
         res.send();
       });
 
@@ -100,16 +98,7 @@ describe('Cookie', function() {
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
           var assertion = Cookie.reset({
-            "substance": 'active',
-            "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "expires": expires.toUTCString(),
-              "max-age": 60000,
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
+            "substance": 'active'
           });
 
           should(function() {
@@ -120,8 +109,6 @@ describe('Cookie', function() {
     });
 
     it('asserts false if cookie is NOT set', function(done) {
-      var expires = new Date();
-
       var app = express();
 
       app.use(cookieParser(secrets));
@@ -135,16 +122,7 @@ describe('Cookie', function() {
         .set("Cookie", "control=placebo")
         .expect(function(res) {
           var assertion = Cookie.reset({
-            "substance": 'active',
-            "options": {
-              "domain": 'domain.com',
-              "path": '/',
-              "expires": expires.toUTCString(),
-              "max-age": 60000,
-              "secure": true,
-              "httponly": true,
-              "secret": secrets
-            }
+            "substance": 'active'
           });
 
           should(function() {
@@ -436,7 +414,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.reset({
+          var assertion = Cookie.renew({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',

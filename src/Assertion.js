@@ -47,7 +47,11 @@ module.exports = function(asserts) {
     };
 
     // build assertions request object
-    if (request.headers.cookie) request.cookies.push(Assertion.parse(request.headers.cookie));
+    if (request.headers.cookie) {
+      request.headers.cookie.split(/; */).forEach(function(cookie) {
+        request.cookies.push(Assertion.parse(cookie));
+      });
+    }
 
     // build assertions response object
     if (Array.isArray(response.headers['set-cookie']) && 0 < response.headers['set-cookie'].length) {
@@ -77,7 +81,7 @@ module.exports = function(asserts) {
     var cookie;
 
     stack.every(function(val) {
-      if (name !== Object.keys(val)[0]) return;
+      if (name !== Object.keys(val)[0]) return true;
       cookie = val;
       return false;
     });
@@ -92,6 +96,7 @@ module.exports = function(asserts) {
    * @param {string} str
    * @param {object} [options]
    * @param {function} [options.decode] uri
+   * @param {undefined|boolean} [options.request] headers
    * @returns {object}
    */
   Assertion.parse = function(str, options) {
@@ -145,15 +150,17 @@ module.exports = function(asserts) {
    * @param {function} cb
    */
   Assertion.expects = function(expects, cb) {
-    if (!Array.isArray(expects)) expects = [expects];
+    if (!Array.isArray(expects) && 'object' === typeof expects) expects = [expects];
 
     expects.forEach(function(expect) {
       var secret;
 
-      if ('string' === typeof expect.options.secret) secret = [expect.options.secret];
-      else if (Array.isArray(expect.options.secret)) secret = expect.options.secret;
+      if ('object' === typeof expect.options) {
+        if ('string' === typeof expect.options.secret) secret = [expect.options.secret];
+        else if (Array.isArray(expect.options.secret)) secret = expect.options.secret;
 
-      delete expect.options.secret;
+        delete expect.options.secret;
+      }
 
       cb(expect, secret);
     });
@@ -193,16 +200,25 @@ module.exports = function(asserts) {
    * Assert cookie has been reset
    *
    * @param {object|object[]} expects cookies
-   * @param {object|object[]} compares cookies
    * @param {undefined|boolean} [assert]
    * @returns {function} Assertion
    */
-  Assertion.reset = function(expects, compares, assert) {
-    if (!Array.isArray(expects)) expects = [expects];
+  Assertion.reset = function(expects, assert) {
+    if ('undefined' === typeof assert) assert = true;
 
-    if (!Array.isArray(compares)) compares = [compares];
+    Assertion.expects(expects, function(expect, secret) {
+      var name = Object.keys(expect)[0];
 
-    // todo add reset assertion
+      assertions.push(function(req, res) {
+        // get sent cookie
+        var cookieReq = Assertion.find(name, req.cookies);
+        // get expectation cookie
+        var cookieRes = Assertion.find(name, res.cookies);
+
+        if (assert && (!cookieReq || !cookieRes)) throw new Error('expected: ' + name + ' cookie to be set');
+        else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+      });
+    });
 
     return Assertion;
   };
