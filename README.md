@@ -120,8 +120,8 @@ Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-
 - `expects` - Object or array of objects.
   - `name` - String name of cookie.
   - `options` - Object of options. `use one of two options below`
-   - `expires` - String UTC expiration for original cookie (in request headers).
-   - `max-age` - Integer ttl for original cookie (in request headers).
+   - `options`.`expires` - String UTC expiration for original cookie (in request headers).
+   - `options`.`max-age` - Integer ttl for original cookie (in request headers).
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
 ### .contain(expects, [assert])
@@ -136,12 +136,12 @@ Requires `Cookies(secret)` initialization if cookie is signed.
   - `name` - String name of cookie.
   - `value` - *Optional* string unsigned value of cookie.
   - `options` - *Optional* object of options.
-   - `domain` - *Optional* string domain.
-   - `path` - *Optional* string path.
-   - `expires` - *Optional* string UTC expiration.
-   - `max-age` - *Optional* integer ttl.
-   - `secure` - *Optional* boolean secure flag.
-   - `httponly` - *Optional* boolean httpOnly flag.
+   - `options`.`domain` - *Optional* string domain.
+   - `options`.`path` - *Optional* string path.
+   - `options`.`expires` - *Optional* string UTC expiration.
+   - `options`.`max-age` - *Optional* integer ttl.
+   - `options`.`secure` - *Optional* boolean secure flag.
+   - `options`.`httponly` - *Optional* boolean httpOnly flag.
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
 ### .not(method, expects)
