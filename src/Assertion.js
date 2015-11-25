@@ -169,7 +169,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Assert cookie and options are set
+   * Assert cookies and options are set
    *
    * @param {object|object[]} expects cookies
    * @param {undefined|boolean} [assert]
@@ -198,7 +198,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Assert cookie has been reset
+   * Assert cookies has been reset
    *
    * @param {object|object[]} expects cookies
    * @param {undefined|boolean} [assert]
@@ -226,7 +226,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Assert cookie is set and new
+   * Assert cookies is set and new
    *
    * @param {object|object[]} expects cookies
    * @param {undefined|boolean} [assert]
@@ -257,7 +257,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Assert cookie expires or max-age has increased
+   * Assert cookies expires or max-age has increased
    *
    * @param {object|object[]} expects cookies
    * @param {undefined|boolean} [assert]
@@ -302,7 +302,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Assert cookie contains values
+   * Assert cookies contains values
    *
    * @param {object|object[]} expects cookies
    * @param {undefined|boolean} [assert]
@@ -351,7 +351,7 @@ module.exports = function(asserts) {
 
 
   /**
-   * Not assert modifier
+   * Assert NOT modifier
    *
    * @param {function} method
    * @param {...*}

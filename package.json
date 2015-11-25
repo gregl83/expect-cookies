@@ -1,26 +1,26 @@
 {
-  "name": "expect-cookie",
+  "name": "expect-cookies",
   "version": "0.1.0",
   "description": "Supertest cookie assertions",
   "author": "Gregory Langlais",
   "private": false,
   "keywords": [
-    "expect-cookie",
-    "ExpectCookie",
+    "expect-cookies",
+    "ExpectCookies",
     "expect",
-    "cookier",
+    "cookie",
     "supertest",
     "assertions"
   ],
-  "main": "src/ExpectCookie",
+  "main": "src/ExpectCookies",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gregl83/expect-cookie.git"
+    "url": "https://github.com/gregl83/expect-cookies.git"
   },
   "bugs": {
-    "url": "https://github.com/gregl83/expect-cookie/issues"
+    "url": "https://github.com/gregl83/expect-cookies/issues"
   },
-  "homepage": "https://github.com/gregl83/expect-cookie",
+  "homepage": "https://github.com/gregl83/expect-cookies",
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/",
     "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/",

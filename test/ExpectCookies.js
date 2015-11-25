@@ -4,18 +4,18 @@ var request = require('supertest');
 var should = require('should');
 var sinon = require('sinon');
 
-var Cookie = require('../');
+var Cookies = require('../');
 var Assertion = require('../src/Assertion');
 
 var secrets = ['one', 'a', 'two', 'b'];
 
 
-describe('Cookie', function() {
+describe('Cookies', function() {
   it('returns Assertion function', function(done) {
     var assertion = Assertion();
-    var cookieAssertion = Cookie();
+    var cookiesAssertion = Cookies();
 
-    should(cookieAssertion).be.eql(assertion);
+    should(cookiesAssertion).be.eql(assertion);
 
     done();
   });
@@ -32,7 +32,7 @@ describe('Cookie', function() {
     request(app)
       .get('/')
       .set("Cookie", "control=placebo")
-      .expect(Cookie(assertion))
+      .expect(Cookies(assertion))
       .end(function() {
         sinon.assert.calledOnce(assertion);
         done();
@@ -57,7 +57,7 @@ describe('Cookie', function() {
     request(app)
       .get('/')
       .set("Cookie", "control=placebo")
-      .expect(Cookie(asserts))
+      .expect(Cookies(asserts))
       .end(function() {
         sinon.assert.calledOnce(assertionA);
         sinon.assert.calledOnce(assertionB);
@@ -82,7 +82,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.set({
+          var assertion = Cookies.set({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -117,7 +117,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.set({
+          var assertion = Cookies.set({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -151,7 +151,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.set({
+          var assertion = Cookies.set({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -185,7 +185,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.reset({
+          var assertion = Cookies.reset({
             "substance": 'active'
           });
 
@@ -209,7 +209,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.reset({
+          var assertion = Cookies.reset({
             "substance": 'active'
           });
 
@@ -238,7 +238,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.new({
+          var assertion = Cookies.new({
             "substance": 'active'
           });
 
@@ -265,7 +265,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.new({
+          var assertion = Cookies.new({
             "substance": 'active'
           });
 
@@ -289,7 +289,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.new({
+          var assertion = Cookies.new({
             "substance": 'active'
           });
 
@@ -319,7 +319,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.renew({
+          var assertion = Cookies.renew({
             "substance": 'active',
             "options": {
               "expires": expires.toUTCString()
@@ -350,7 +350,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.renew({
+          var assertion = Cookies.renew({
             "substance": 'active',
             "options": {
               "expires": expires.toUTCString()
@@ -378,7 +378,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.renew({
+          var assertion = Cookies.renew({
             "substance": 'active',
             "options": {
               "max-age": 60
@@ -406,7 +406,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo;substance=active")
         .expect(function(res) {
-          var assertion = Cookie.renew({
+          var assertion = Cookies.renew({
             "substance": 'active',
             "options": {
               "max-age": 120
@@ -435,7 +435,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.renew({
+          var assertion = Cookies.renew({
             "substance": 'active',
             "options": {
               "expires": expires.toUTCString()
@@ -467,7 +467,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.contain({
+          var assertion = Cookies.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -502,7 +502,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.contain({
+          var assertion = Cookies.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -537,7 +537,7 @@ describe('Cookie', function() {
         .get('/')
         .set("Cookie", "control=placebo")
         .expect(function(res) {
-          var assertion = Cookie.contain({
+          var assertion = Cookies.contain({
             "substance": 'active',
             "options": {
               "domain": 'domain.com',
@@ -572,7 +572,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('set', {
+            var assertion = Cookies.not('set', {
               "substance": 'active'
             });
 
@@ -599,7 +599,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('set', {
+            var assertion = Cookies.not('set', {
               "substance": 'active',
               "options": {
                 "httponly": true
@@ -629,7 +629,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('set', {
+            var assertion = Cookies.not('set', {
               "substance": 'active'
             });
 
@@ -655,7 +655,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('reset', {
+            var assertion = Cookies.not('reset', {
               "substance": 'active'
             });
 
@@ -682,7 +682,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('reset', {
+            var assertion = Cookies.not('reset', {
               "substance": 'active'
             });
 
@@ -711,7 +711,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('new', {
+            var assertion = Cookies.not('new', {
               "substance": 'active'
             });
 
@@ -738,7 +738,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('new', {
+            var assertion = Cookies.not('new', {
               "substance": 'active'
             });
 
@@ -767,7 +767,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "expires": expires.toUTCString()
@@ -798,7 +798,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "expires": expires.toUTCString()
@@ -829,7 +829,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "expires": expires.toUTCString()
@@ -857,7 +857,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "max-age": 60
@@ -885,7 +885,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "max-age": 60
@@ -913,7 +913,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo;substance=active")
           .expect(function(res) {
-            var assertion = Cookie.not('renew', {
+            var assertion = Cookies.not('renew', {
               "substance": 'active',
               "options": {
                 "max-age": 60
@@ -945,7 +945,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('contain', {
+            var assertion = Cookies.not('contain', {
               "substance": 'active',
               "options": {
                 "secret": secrets
@@ -975,7 +975,7 @@ describe('Cookie', function() {
           .get('/')
           .set("Cookie", "control=placebo")
           .expect(function(res) {
-            var assertion = Cookie.not('contain', {
+            var assertion = Cookies.not('contain', {
               "substance": 'active',
               "options": {
                 "domain": 'domain.com',

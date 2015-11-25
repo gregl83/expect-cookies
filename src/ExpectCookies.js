@@ -1,24 +1,24 @@
 var Assertion = require('./Assertion');
 
 /**
- * Construct cookie assertion (function)
+ * Construct cookies assertion (function)
  *
  * @param {function(req, res)[]} asserts ran within returned assertion function
  * @returns {function} assertion
  * @constructor
  */
-function ExpectCookie(asserts) {
+function ExpectCookies(asserts) {
   return Assertion(asserts);
 }
 
 
-// build ExpectCookie proxy methods
+// build ExpectCookies proxy methods
 var assertion = Assertion();
 var methods = Object.getOwnPropertyNames(assertion);
 
 methods.forEach(function(method) {
   if ('function' === typeof assertion[method] && 'undefined' === typeof Function[method]) {
-    ExpectCookie[method] = function() {
+    ExpectCookies[method] = function() {
       var assertion = Assertion();
       return assertion[method].apply(assertion, arguments);
     };
@@ -26,4 +26,4 @@ methods.forEach(function(method) {
 });
 
 
-module.exports = ExpectCookie;
+module.exports = ExpectCookies;
