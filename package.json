@@ -1,7 +1,7 @@
 {
   "name": "expect-cookies",
-  "version": "0.1.0",
-  "description": "SuperTest cookie assertions",
+  "version": "0.1.1",
+  "description": "SuperTest Cookie Assertions",
   "author": "Gregory Langlais",
   "private": false,
   "keywords": [
