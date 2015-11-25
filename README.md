@@ -80,7 +80,7 @@ Get assertion function for [super-test](https://github.com/visionmedia/supertest
 - `secret` - String or array of strings. Cookie signature secrets.
 - `asserts(req, res)` - Function or array of functions. Failed custom assertions should throw. 
 
-###   .set(expects, [assert])
+### .set(expects, [assert])
 
 Assert that cookie and options are set.
 
@@ -91,7 +91,7 @@ Assert that cookie and options are set.
   - `options` - *Optional* array of options.
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
-###   .reset(expects, [assert])
+### .reset(expects, [assert])
 
 Assert that cookie is set and was already set (in request headers).
 
@@ -101,7 +101,7 @@ Assert that cookie is set and was already set (in request headers).
   - `name` - String name of cookie.
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
-###   .new(expects, [assert])
+### .new(expects, [assert])
 
 Assert that cookie is set and was NOT already set (NOT in request headers).
 
@@ -111,7 +111,7 @@ Assert that cookie is set and was NOT already set (NOT in request headers).
   - `name` - String name of cookie.
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
-###   .renew(expects, [assert])
+### .renew(expects, [assert])
 
 Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-age` than was already set.
 
@@ -124,7 +124,7 @@ Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-
    - `max-age` - Integer ttl for original cookie (in request headers).
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
-###   .contain(expects, [assert])
+### .contain(expects, [assert])
 
 Assert that cookie is set with value and contains options.
 
@@ -144,7 +144,7 @@ Requires `Cookies(secret)` initialization if cookie is signed.
    - `httponly` - *Optional* boolean httpOnly flag.
 - `assert` - *Optional* boolean "assert true" modifier. Default: `true`.
 
-###   .not(method, expects)
+### .not(method, expects)
 
 Call any cookies assertion method with "assert true" modifier set to `false`.
 
