@@ -40,6 +40,7 @@ var request = require('supertest')
 var app = express();
 
 app.get('/users', function(req, res){
+  res.cookie('alpha', 'one', {domain: 'domain.com', path: '/', httpOnly: true});
   res.send(200, { name: 'tobi' });
 });
 
@@ -49,8 +50,8 @@ request(app)
   .expect('Content-Type', /json/)
   .expect('Content-Length', '20')
   .expect(200)
-  // assert alpha cookie is set with httpOnly option
-  .expect(Cookies.set({alpha: ['httponly']}))
+  // assert alpha cookie is set and the domain, path, and httpOnly options are also set
+  .expect(Cookies.set({alpha: ['domain', 'path', 'httponly']}))
   // assert bravo cookie is NOT set
   .expect(Cookies.not('set', {bravo: []})
   .end(function(err, res){
