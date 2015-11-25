@@ -13,17 +13,20 @@ var should = require('should');
  * {number} [expects.options.max-age]
  * {boolean} [expects.options.secure]
  * {boolean} [expects.options.httponly]
- * {string|string[]} [expects.options.secret]
+ * {string|string[]} [expects.secret]
  *
+ * @param {null|string|string[]} [secret]
  * @param {function|function[]} [asserts]
  * @returns {Assertion}
  */
-module.exports = function(asserts) {
+module.exports = function(secret, asserts) {
   var assertions = [];
+
+  if ('string' === typeof secret) secret = [secret];
+  else if (!Array.isArray(secret)) secret = [];
 
   if (Array.isArray(asserts)) assertions = asserts;
   else if ('function' === typeof asserts) assertions.push(asserts);
-
 
   /**
    * Assertion function with static chainable methods
@@ -81,7 +84,7 @@ module.exports = function(asserts) {
     var cookie;
 
     stack.every(function(val) {
-      if (name !== Object.keys(val)[0]) return true;
+      if (name !== val.name) return true;
       cookie = val;
       return false;
     });
@@ -112,15 +115,11 @@ module.exports = function(asserts) {
 
     parts.forEach(function(part, i) {
       if (1 === i) cookie.options = {};
-      var cookieRef = (0 === i) ? cookie : cookie.options;
 
       var equalsIndex = part.indexOf('=');
 
       // things that don't look like key=value get true flag
-      if (equalsIndex < 0) {
-        cookieRef[part.trim().toLowerCase()] = true;
-        return;
-      }
+      if (equalsIndex < 0) return (cookie.options[part.trim().toLowerCase()] = true);
 
       var key = part.substr(0, equalsIndex).trim().toLowerCase();
       // only assign once
@@ -130,11 +129,17 @@ module.exports = function(asserts) {
       // quoted values
       if ('"' == val[0]) val = val.slice(1, -1);
 
+      var value;
       try {
-        cookieRef[key] = decode(val);
+        value = decode(val);
       } catch (e) {
-        cookieRef[key] = val;
+        value = val;
       }
+
+      if (0 < i) return cookie.options[key] = value;
+
+      cookie.name = key;
+      cookie.value = decode(val);
     });
 
     if ('undefined' === typeof cookie.options) cookie.options = {};
@@ -147,23 +152,23 @@ module.exports = function(asserts) {
    * Iterate expects
    *
    * @param {object|object[]} expects
-   * @param {function} cb
+   * @param {boolean|function} hasValues
+   * @param {function} [cb]
    */
-  Assertion.expects = function(expects, cb) {
+  Assertion.expects = function(expects, hasValues, cb) {
     if (!Array.isArray(expects) && 'object' === typeof expects) expects = [expects];
 
+    if ('undefined' === typeof cb && 'function' === typeof hasValues) {
+      cb = hasValues;
+      hasValues = false;
+    }
+
     expects.forEach(function(expect) {
-      var secret;
-
-      if ('object' === typeof expect.options) {
-        if ('string' === typeof expect.options.secret) secret = [expect.options.secret];
-        else if (Array.isArray(expect.options.secret)) secret = expect.options.secret;
-
-        delete expect.options.secret;
+      if ('object' !== typeof expect.options && !Array.isArray(expect.options)) {
+        expect.options = (hasValues) ? {} : [];
       }
-      else expect.options = {};
 
-      cb(expect, secret);
+      cb(expect);
     });
   };
 
@@ -178,18 +183,15 @@ module.exports = function(asserts) {
   Assertion.set = function(expects, assert) {
     if ('undefined' === typeof assert) assert = true;
 
-    Assertion.expects(expects, function(expect, secret) {
-      var name = Object.keys(expect)[0];
-      var keys = Object.keys(expect.options);
-
+    Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get expectation cookie
-        var cookie = Assertion.find(name, res.cookies);
+        var cookie = Assertion.find(expect.name, res.cookies);
 
-        if (assert && !cookie) throw new Error('expected: ' + name + ' cookie to be set');
+        if (assert && !cookie) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
-        if (assert) should(cookie.options).have.properties(keys);
-        else if(cookie) should(cookie.options).not.have.properties(keys);
+        if (assert) should(cookie.options).have.properties(expect.options);
+        else if(cookie) should(cookie.options).not.have.properties(expect.options);
       });
     });
 
@@ -207,17 +209,15 @@ module.exports = function(asserts) {
   Assertion.reset = function(expects, assert) {
     if ('undefined' === typeof assert) assert = true;
 
-    Assertion.expects(expects, function(expect, secret) {
-      var name = Object.keys(expect)[0];
-
+    Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(name, req.cookies);
+        var cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(name, res.cookies);
+        var cookieRes = Assertion.find(expect.name, res.cookies);
 
-        if (assert && (!cookieReq || !cookieRes)) throw new Error('expected: ' + name + ' cookie to be set');
-        else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+        if (assert && (!cookieReq || !cookieRes)) throw new Error('expected: ' + expect.name + ' cookie to be set');
+        else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
       });
     });
 
@@ -235,20 +235,18 @@ module.exports = function(asserts) {
   Assertion.new = function(expects, assert) {
     if ('undefined' === typeof assert) assert = true;
 
-    Assertion.expects(expects, function(expect, secret) {
-      var name = Object.keys(expect)[0];
-
+    Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(name, req.cookies);
+        var cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(name, res.cookies);
+        var cookieRes = Assertion.find(expect.name, res.cookies);
 
         if (assert) {
-          if (!cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
-          if (cookieReq && cookieRes) throw new Error('expected: ' + name + ' cookie to NOT already be set');
+          if (!cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
+          if (cookieReq && cookieRes) throw new Error('expected: ' + expect.name + ' cookie to NOT already be set');
         }
-        else if (!cookieReq || !cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+        else if (!cookieReq || !cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
       });
     });
 
@@ -266,33 +264,31 @@ module.exports = function(asserts) {
   Assertion.renew = function(expects, assert) {
     if ('undefined' === typeof assert) assert = true;
 
-    Assertion.expects(expects, function(expect, secret) {
-      var name = Object.keys(expect)[0];
-
+    Assertion.expects(expects, true, function(expect) {
       var expectExpires = new Date(expect.options.expires);
       var expectMaxAge = parseInt(expect.options['max-age']);
 
-      if (!expectExpires.getTime() && !expectMaxAge) throw new Error('expected: ' + name + ' expects to have expires or max-age option');
+      if (!expectExpires.getTime() && !expectMaxAge) throw new Error('expected: ' + expect.name + ' expects to have expires or max-age option');
 
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(name, req.cookies);
+        var cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(name, res.cookies);
+        var cookieRes = Assertion.find(expect.name, res.cookies);
 
         var cookieMaxAge = (expectMaxAge && cookieRes) ? parseInt(cookieRes.options['max-age']) : undefined;
         var cookieExpires = (expectExpires.getTime() && cookieRes) ? new Date(cookieRes.options.expires) : undefined;
 
         if (assert) {
-          if (!cookieReq || !cookieRes) throw new Error('expected: ' + name + ' cookie to be set');
+          if (!cookieReq || !cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
-          if (expectMaxAge && (!cookieMaxAge || cookieMaxAge <= expectMaxAge)) throw new Error('expected: ' + name + ' cookie max-age to be greater than existing value');
+          if (expectMaxAge && (!cookieMaxAge || cookieMaxAge <= expectMaxAge)) throw new Error('expected: ' + expect.name + ' cookie max-age to be greater than existing value');
 
-          if (expectExpires.getTime() && (!cookieExpires.getTime() || cookieExpires <= expectExpires)) throw new Error('expected: ' + name + ' cookie expires to be greater than existing value');
+          if (expectExpires.getTime() && (!cookieExpires.getTime() || cookieExpires <= expectExpires)) throw new Error('expected: ' + expect.name + ' cookie expires to be greater than existing value');
         } else if (cookieRes) {
-          if (expectMaxAge && cookieMaxAge > expectMaxAge) throw new Error('expected: ' + name + ' cookie max-age to be less than or equal to existing value');
+          if (expectMaxAge && cookieMaxAge > expectMaxAge) throw new Error('expected: ' + expect.name + ' cookie max-age to be less than or equal to existing value');
 
-          if (expectExpires.getTime() && cookieExpires > expectExpires) throw new Error('expected: ' + name + ' cookie expires to be less than or equal to existing value');
+          if (expectExpires.getTime() && cookieExpires > expectExpires) throw new Error('expected: ' + expect.name + ' cookie expires to be less than or equal to existing value');
         }
       });
     });
@@ -311,30 +307,29 @@ module.exports = function(asserts) {
   Assertion.contain = function(expects, assert) {
     if ('undefined' === typeof assert) assert = true;
 
-    Assertion.expects(expects, function(expect, secret) {
-      var name = Object.keys(expect)[0];
+    Assertion.expects(expects, function(expect) {
       var keys = Object.keys(expect.options);
 
       assertions.push(function(req, res) {
         // get expectation cookie
-        var cookie = Assertion.find(name, res.cookies);
+        var cookie = Assertion.find(expect.name, res.cookies);
 
-        if (!cookie) throw new Error('expected: ' + name + ' cookie to be set');
+        if (!cookie) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
         // check cookie values are equal
         try {
-          if (assert) should(cookie[name]).be.eql(expect[name]);
-          else should(cookie[name]).not.be.eql(expect[name]);
+          if (assert) should(cookie.value).be.eql(expect.value);
+          else should(cookie.value).not.be.eql(expect.value);
         } catch(e) {
           if (secret.length) {
             var value;
             secret.every(function(sec) {
-              value = signature.unsign(cookie[name].slice(2), sec);
-              return !(value && value === expect[name]);
+              value = signature.unsign(cookie.value.slice(2), sec);
+              return !(value && value === expect.value);
             });
 
-            if (assert && !value) throw new Error('expected: ' + name + ' value to equal ' + expect[name]);
-            else if (!assert && value) throw new Error('expected: ' + name + ' value to NOT equal ' + expect[name]);
+            if (assert && !value) throw new Error('expected: ' + expect.name + ' value to equal ' + expect.value);
+            else if (!assert && value) throw new Error('expected: ' + expect.name + ' value to NOT equal ' + expect.value);
           }
           else throw e;
         }

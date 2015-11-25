@@ -3,12 +3,13 @@ var Assertion = require('./Assertion');
 /**
  * Construct cookies assertion (function)
  *
- * @param {function(req, res)[]} asserts ran within returned assertion function
+ * @param {null|string|string[]} [secret]
+ * @param {function(req, res)[]} [asserts] ran within returned assertion function
  * @returns {function} assertion
  * @constructor
  */
-function ExpectCookies(asserts) {
-  return Assertion(asserts);
+function ExpectCookies(secret, asserts) {
+  return Assertion(secret, asserts);
 }
 
 

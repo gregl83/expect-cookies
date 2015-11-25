@@ -6,7 +6,9 @@ SuperTest Cookie Assertions
 
 HTTP cookie assertions via [super-test](https://github.com/visionmedia/supertest).
 
-Writing HTTP cookie tests can result in redundant and verbose test code. This module was written to make testing cookies easier and reduce redundancies.
+Writing HTTP cookie tests can result in redundant and verbose test code.
+
+This module was written to make testing cookies easier and reduce redundancies.
 
 ## Requirements
 
@@ -26,7 +28,7 @@ Source available on [GitHub](https://github.com/gregl83/expect-cookies) or insta
 
 Usage instructions assume general knowledge of [super-test](https://github.com/visionmedia/supertest).
 
-Here is an example of using the `set` and `not` methods to make 2 cookie assertions:
+Here is an example of using the `set` and `not` cookie assertions:
 
 ```js
 // get ExpectCookies module
@@ -50,13 +52,19 @@ request(app)
   .expect('Content-Type', /json/)
   .expect('Content-Length', '20')
   .expect(200)
-  // assert alpha cookie is set and the domain, path, and httpOnly options are also set
-  .expect(Cookies.set({alpha: ['domain', 'path', 'httponly']}))
-  // assert bravo cookie is NOT set
-  .expect(Cookies.not('set', {bravo: []})
+  // assert 'alpha' cookie is set with domain, path, and httpOnly options
+  .expect(Cookies.set({'name': 'alpha', 'options': ['domain', 'path', 'httponly']}))
+  // assert 'bravo' cookie is NOT set
+  .expect(Cookies.not('set', {'name': 'bravo'})
   .end(function(err, res){
     if (err) throw err;
   });
+```
+
+It is also possible to chain assertions:
+
+```js
+Cookies.set({/* ... */}).not('set', {/* ... */})
 ```
 
 ## License
