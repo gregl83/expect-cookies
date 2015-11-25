@@ -67,6 +67,93 @@ It is also possible to chain assertions:
 Cookies.set({/* ... */}).not('set', {/* ... */})
 ```
 
+## API
+
+All API functions and methods are chainable.
+
+### Cookies([secret], [asserts])
+
+Get cookie assertion for [super-test](https://github.com/visionmedia/supertest) `.expect()` method.
+
+*Arguments*
+
+- `secret` - String or array of strings. Cookie signature secrets 
+- `asserts(req, res)` - Function or array of custom assertions. Failed assertions should throw. 
+
+### Cookies.set(expects, [assert])
+
+Assert that cookie and options are set.
+
+*Arguments*
+
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+  - `options` - *Optional* array of options.
+- `assert` - *Optional* boolean "assert true" modifier. Defaults to `true`.
+
+### Cookies.reset(expects, [assert])
+
+Assert that cookie is set and was already set (in request headers).
+
+*Arguments*
+
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+- `assert` - *Optional* boolean "assert true" modifier. Defaults to `true`.
+
+### Cookies.new(expects, [assert])
+
+Assert that cookie is set and was NOT already set (NOT in request headers).
+
+*Arguments*
+
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+- `assert` - *Optional* boolean "assert true" modifier. Defaults to `true`.
+
+### Cookies.renew(expects, [assert])
+
+Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-age` than was already set.
+
+*Arguments*
+
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+  - `options` - Object of options. `use one of two options below`
+   - `expires` - String UTC expiration for original cookie (in request headers).
+   - `max-age` - Integer ttl for original cookie (in request headers).
+- `assert` - *Optional* boolean "assert true" modifier. Defaults to `true`.
+
+### Cookies.contain(expects, [assert])
+
+Assert that cookie is set and contains expected options and value. May require `Cookie(secret)` initialization.
+
+*Arguments*
+
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+  - `value` - *Optional* string value of cookie.
+  - `options` - *Optional* object of options.
+   - `domain` - *Optional* string domain.
+   - `path` - *Optional* string path.
+   - `expires` - *Optional* string UTC expiration.
+   - `max-age` - *Optional* integer ttl.
+   - `secure` - *Optional* boolean secure flag.
+   - `httponly` - *Optional* boolean httpOnly flag.
+- `assert` - *Optional* boolean "assert true" modifier. Defaults to `true`.
+
+### Cookies.not(method, expects)
+
+Call any cookies assertion method with boolean "assert true" modifier set to `false`. Syntactic sugar.
+
+*Arguments*
+
+- `method` - String method name. Arguments of method name apply in `expects`.
+- `expects` - Object or array of objects.
+  - `name` - String name of cookie.
+  - `value` - *Optional* string value of cookie.
+  - `options` - *Optional* object of options.
+
 ## License
 
 MIT
