@@ -1,7 +1,7 @@
 {
   "name": "expect-cookies",
   "version": "0.1.0",
-  "description": "Supertest cookie assertions",
+  "description": "SuperTest cookie assertions",
   "author": "Gregory Langlais",
   "private": false,
   "keywords": [
@@ -10,7 +10,9 @@
     "expect",
     "cookie",
     "supertest",
-    "assertions"
+    "assertions",
+    "expressjs",
+    "express"
   ],
   "main": "src/ExpectCookies",
   "repository": {
