@@ -40,7 +40,7 @@ module.exports = function(secret, asserts) {
 
     // request and response object initialization
     var request = {
-      headers: res.req._headers,
+      headers: res.req.getHeaders(),
       cookies: []
     };
 
