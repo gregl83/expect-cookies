@@ -48,10 +48,11 @@ module.exports = function(secret, asserts) {
       headers: res.headers,
       cookies: []
     };
-
+    
     // build assertions request object
     if (request.headers.cookie) {
-      request.headers.cookie.split(/; */).forEach(function(cookie) {
+      const cookies =  String(request.headers.cookie)
+      cookies.split(/; */).forEach(function(cookie) {
         request.cookies.push(Assertion.parse(cookie));
       });
     }
