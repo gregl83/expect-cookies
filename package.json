@@ -1,6 +1,6 @@
 {
   "name": "expect-cookies",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "SuperTest Cookie Assertions",
   "author": "Gregory Langlais",
   "private": false,
@@ -30,14 +30,14 @@
   },
   "devDependencies": {
     "cookie-parser": "~1.4.0",
-    "express": "~4.11.1",
-    "mocha": "2.2.x",
-    "supertest": "0.15.x",
-    "should": "5.2.x",
-    "mockery": "1.4.X",
-    "sinon": "1.17.x",
     "coveralls": "2.11.x",
-    "istanbul": "0.3.x"
+    "express": "~4.11.1",
+    "istanbul": "0.3.x",
+    "mocha": "2.2.x",
+    "mockery": "1.4.X",
+    "should": "5.2.x",
+    "sinon": "1.17.x",
+    "supertest": "0.15.x"
   },
   "dependencies": {
     "cookie-signature": "1.0.x",
