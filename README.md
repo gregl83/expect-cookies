@@ -113,7 +113,7 @@ Assert that cookie is set and was NOT already set (NOT in request headers).
 
 ### .renew(expects, [assert])
 
-Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-age` than was already set.
+Assert that cookie is set with a strictly greater `expires` or `max-age` than the given value.
 
 *Arguments*
 

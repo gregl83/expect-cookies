@@ -273,7 +273,7 @@ describe('Cookies', function() {
   });
 
   describe('.renew', function() {
-    it('asserts true if cookie expiration is greater than already set cookie', function(done) {
+    it('asserts true if cookie expiration is greater than expected', function(done) {
       var expires = new Date();
       var expiresRenewed = new Date(expires.getTime() + 60000);
 
@@ -304,7 +304,7 @@ describe('Cookies', function() {
         .end(done);
     });
 
-    it('asserts false if cookie expiration is less than or equal to already set cookie', function(done) {
+    it('asserts false if cookie expiration is less than expected', function(done) {
       var expires = new Date();
       var expiresRenewed = new Date(expires.getTime() - 60000);
 
@@ -335,7 +335,7 @@ describe('Cookies', function() {
         .end(done);
     });
 
-    it('asserts true if cookie max-age is greater than already set cookie', function(done) {
+    it('asserts true if cookie max-age is greater than expected', function(done) {
       var app = express();
 
       app.use(cookieParser(secrets));
@@ -363,7 +363,7 @@ describe('Cookies', function() {
         .end(done);
     });
 
-    it('asserts false if cookie max-age is less than or equal to already set cookie', function(done) {
+    it('asserts false if cookie max-age is less than or equal to expected', function(done) {
       var app = express();
 
       app.use(cookieParser(secrets));
