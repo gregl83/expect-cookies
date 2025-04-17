@@ -493,6 +493,33 @@ describe('Cookies', function() {
         .end(done);
     });
 
+    it('allows any value if omitted from expects object', function(done) {
+
+      var app = express();
+      app.use(cookieParser(secrets));
+      app.get('/', function (req, res) {
+        res.cookie('substance', 'active', {domain: 'domain.com'});
+        res.send();
+      });
+
+      request(app)
+        .get('/')
+        .set('Cookie', 'control=placebo')
+        .expect(function (res) {
+          var assertion = Cookies(secrets).contain({
+            'name': 'substance',
+            'options': {
+              'domain': 'domain.com',
+            },
+          });
+
+          should(function () {
+            assertion(res);
+          }).not.throw();
+        })
+        .end(done);
+    });
+
     it('asserts false if cookie does NOT exist', function(done) {
       var expires = new Date();
 

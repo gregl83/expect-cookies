@@ -318,21 +318,23 @@ module.exports = function(secret, asserts) {
         if (!cookie) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
         // check cookie values are equal
-        try {
-          if (assert) should(cookie.value).be.eql(expect.value);
-          else should(cookie.value).not.be.eql(expect.value);
-        } catch(e) {
-          if (secret.length) {
-            var value;
-            secret.every(function(sec) {
-              value = signature.unsign(cookie.value.slice(2), sec);
-              return !(value && value === expect.value);
-            });
+        if ('value' in expect) {
+          try {
+            if (assert) should(cookie.value).be.eql(expect.value);
+            else should(cookie.value).not.be.eql(expect.value);
+          } catch(e) {
+            if (secret.length) {
+              var value;
+              secret.every(function(sec) {
+                value = signature.unsign(cookie.value.slice(2), sec);
+                return !(value && value === expect.value);
+              });
 
-            if (assert && !value) throw new Error('expected: ' + expect.name + ' value to equal ' + expect.value);
-            else if (!assert && value) throw new Error('expected: ' + expect.name + ' value to NOT equal ' + expect.value);
+              if (assert && !value) throw new Error('expected: ' + expect.name + ' value to equal ' + expect.value);
+              else if (!assert && value) throw new Error('expected: ' + expect.name + ' value to NOT equal ' + expect.value);
+            }
+            else throw e;
           }
-          else throw e;
         }
 
         keys.forEach(function(key) {
