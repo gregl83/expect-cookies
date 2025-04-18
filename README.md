@@ -32,14 +32,14 @@ Here is an example of using the `set` and `not` cookie assertions:
 
 ```js
 // get ExpectCookies module
-var Cookies = require('expect-cookies');
+const Cookies = require('expect-cookies');
 
 // setup super-test
-var request = require('supertest')
-  , express = require('express');
+const request = require('supertest');
+const express = require('express');
 
 // setup express test service
-var app = express();
+const app = express();
 
 app.get('/users', function(req, res){
   res.cookie('alpha', 'one', {domain: 'domain.com', path: '/', httpOnly: true});
@@ -113,7 +113,7 @@ Assert that cookie is set and was NOT already set (NOT in request headers).
 
 ### .renew(expects, [assert])
 
-Assert that cookie is set with a "greater than" or "equal to" `expires` or `max-age` than was already set.
+Assert that cookie is set with a strictly greater `expires` or `max-age` than the given value.
 
 *Arguments*
 
