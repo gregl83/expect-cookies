@@ -162,4 +162,4 @@ That's it!
 
 ## License
 
-MIT
+[MIT](LICENSE)
