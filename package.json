@@ -31,7 +31,7 @@
   "devDependencies": {
     "cookie-parser": "~1.4.0",
     "coveralls": "2.11.x",
-    "express": "~4.11.1",
+    "express": "~4.20.0",
     "istanbul": "0.3.x",
     "mocha": "2.2.x",
     "mockery": "1.4.X",
