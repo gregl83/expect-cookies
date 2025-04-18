@@ -566,8 +566,37 @@ describe('Cookies', function() {
         .end(done);
     });
 
-    it('allows any value if omitted from expects object', function(done) {
+    it('handles type conversion for max-age', function(done) {
+      var app = express();
 
+      app.use(cookieParser(secrets));
+
+      app.get('/', function (req, res) {
+        res.cookie('substance', 'active', {domain: 'domain.com', maxAge: 60000});
+        res.send();
+      });
+
+      request(app)
+        .get('/')
+        .set('Cookie', 'control=placebo')
+        .expect(function (res) {
+          var assertion = Cookies(secrets).contain({
+            'name': 'substance',
+            'value': 'active',
+            'options': {
+              'domain': 'domain.com',
+              'max-age': 60
+            }
+          });
+
+          should(function () {
+            assertion(res);
+          }).not.throw();
+        })
+        .end(done);
+    });
+
+    it('allows any value if omitted from expects object', function(done) {
       var app = express();
       app.use(cookieParser(secrets));
       app.get('/', function (req, res) {

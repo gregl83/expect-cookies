@@ -48,7 +48,7 @@ module.exports = function(secret, asserts) {
       headers: res.headers,
       cookies: []
     };
-    
+
     // build assertions request object
     if (request.headers.cookie) {
       const cookies =  String(request.headers.cookie)
@@ -338,8 +338,13 @@ module.exports = function(secret, asserts) {
         }
 
         keys.forEach(function(key) {
-          if (assert) should(cookie.options[key]).be.eql(expect.options[key]);
-          else should(cookie.options[key]).not.be.eql(expect.options[key]);
+          const expected = (
+            key === 'max-age'
+              ? expect.options[key].toString()
+              : expect.options[key]
+          );
+          if (assert) should(cookie.options[key]).be.eql(expected);
+          else should(cookie.options[key]).not.be.eql(expected);
         });
       });
     });
