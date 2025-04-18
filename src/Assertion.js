@@ -1,5 +1,5 @@
-var signature = require('cookie-signature');
-var should = require('should');
+const signature = require('cookie-signature');
+const should = require('should');
 
 /**
  * Build Assertion function
@@ -20,7 +20,7 @@ var should = require('should');
  * @returns {Assertion}
  */
 module.exports = function(secret, asserts) {
-  var assertions = [];
+  let assertions = [];
 
   if ('string' === typeof secret) secret = [secret];
   else if (!Array.isArray(secret)) secret = [];
@@ -39,12 +39,12 @@ module.exports = function(secret, asserts) {
     if ('object' !== typeof res) throw new Error('res argument must be object');
 
     // request and response object initialization
-    var request = {
+    let request = {
       headers: res.req.getHeaders(),
       cookies: []
     };
 
-    var response = {
+    let response = {
       headers: res.headers,
       cookies: []
     };
@@ -65,7 +65,7 @@ module.exports = function(secret, asserts) {
     }
 
     // run assertions
-    var result = undefined;
+    let result = undefined;
     assertions.every(function(assertion) {
       return ('string' !== typeof (result = assertion(request, response)));
     });
@@ -82,7 +82,7 @@ module.exports = function(secret, asserts) {
    * @returns {object|undefined} cookie
    */
   Assertion.find = function(name, stack) {
-    var cookie;
+    let cookie;
 
     stack.every(function(val) {
       if (name !== val.name) return true;
@@ -108,29 +108,29 @@ module.exports = function(secret, asserts) {
 
     if ('object' !== typeof options) options = {};
 
-    var decode = options.decode || decodeURIComponent;
+    let decode = options.decode || decodeURIComponent;
 
-    var parts = str.split(/; */);
+    let parts = str.split(/; */);
 
-    var cookie = {};
+    let cookie = {};
 
     parts.forEach(function(part, i) {
       if (1 === i) cookie.options = {};
 
-      var equalsIndex = part.indexOf('=');
+      let equalsIndex = part.indexOf('=');
 
       // things that don't look like key=value get true flag
       if (equalsIndex < 0) return (cookie.options[part.trim().toLowerCase()] = true);
 
-      var key = part.substr(0, equalsIndex).trim().toLowerCase();
+      const key = part.substr(0, equalsIndex).trim().toLowerCase();
       // only assign once
       if ('undefined' !== typeof cookie[key]) return;
 
-      var val = part.substr(++equalsIndex, part.length).trim();
+      let val = part.substr(++equalsIndex, part.length).trim();
       // quoted values
       if ('"' == val[0]) val = val.slice(1, -1);
 
-      var value;
+      let value;
       try {
         value = decode(val);
       } catch (e) {
@@ -187,7 +187,7 @@ module.exports = function(secret, asserts) {
     Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get expectation cookie
-        var cookie = Assertion.find(expect.name, res.cookies);
+        const cookie = Assertion.find(expect.name, res.cookies);
 
         if (assert && !cookie) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
@@ -213,9 +213,9 @@ module.exports = function(secret, asserts) {
     Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(expect.name, req.cookies);
+        const cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(expect.name, res.cookies);
+        const cookieRes = Assertion.find(expect.name, res.cookies);
 
         if (assert && (!cookieReq || !cookieRes)) throw new Error('expected: ' + expect.name + ' cookie to be set');
         else if (!assert && cookieReq && cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
@@ -239,9 +239,9 @@ module.exports = function(secret, asserts) {
     Assertion.expects(expects, function(expect) {
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(expect.name, req.cookies);
+        const cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(expect.name, res.cookies);
+        const cookieRes = Assertion.find(expect.name, res.cookies);
 
         if (assert) {
           if (!cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
@@ -266,19 +266,19 @@ module.exports = function(secret, asserts) {
     if ('undefined' === typeof assert) assert = true;
 
     Assertion.expects(expects, true, function(expect) {
-      var expectExpires = new Date(expect.options.expires);
-      var expectMaxAge = parseInt(expect.options['max-age']);
+      const expectExpires = new Date(expect.options.expires);
+      const expectMaxAge = parseFloat(expect.options['max-age']);
 
       if (!expectExpires.getTime() && !expectMaxAge) throw new Error('expected: ' + expect.name + ' expects to have expires or max-age option');
 
       assertions.push(function(req, res) {
         // get sent cookie
-        var cookieReq = Assertion.find(expect.name, req.cookies);
+        const cookieReq = Assertion.find(expect.name, req.cookies);
         // get expectation cookie
-        var cookieRes = Assertion.find(expect.name, res.cookies);
+        const cookieRes = Assertion.find(expect.name, res.cookies);
 
-        var cookieMaxAge = (expectMaxAge && cookieRes) ? parseInt(cookieRes.options['max-age']) : undefined;
-        var cookieExpires = (expectExpires.getTime() && cookieRes) ? new Date(cookieRes.options.expires) : undefined;
+        const cookieMaxAge = (expectMaxAge && cookieRes) ? parseFloat(cookieRes.options['max-age']) : undefined;
+        const cookieExpires = (expectExpires.getTime() && cookieRes) ? new Date(cookieRes.options.expires) : undefined;
 
         if (assert) {
           if (!cookieReq || !cookieRes) throw new Error('expected: ' + expect.name + ' cookie to be set');
@@ -309,30 +309,32 @@ module.exports = function(secret, asserts) {
     if ('undefined' === typeof assert) assert = true;
 
     Assertion.expects(expects, function(expect) {
-      var keys = Object.keys(expect.options);
+      const keys = Object.keys(expect.options);
 
       assertions.push(function(req, res) {
         // get expectation cookie
-        var cookie = Assertion.find(expect.name, res.cookies);
+        const cookie = Assertion.find(expect.name, res.cookies);
 
         if (!cookie) throw new Error('expected: ' + expect.name + ' cookie to be set');
 
         // check cookie values are equal
-        try {
-          if (assert) should(cookie.value).be.eql(expect.value);
-          else should(cookie.value).not.be.eql(expect.value);
-        } catch(e) {
-          if (secret.length) {
-            var value;
-            secret.every(function(sec) {
-              value = signature.unsign(cookie.value.slice(2), sec);
-              return !(value && value === expect.value);
-            });
+        if ('value' in expect) {
+          try {
+            if (assert) should(cookie.value).be.eql(expect.value);
+            else should(cookie.value).not.be.eql(expect.value);
+          } catch(e) {
+            if (secret.length) {
+              var value;
+              secret.every(function(sec) {
+                value = signature.unsign(cookie.value.slice(2), sec);
+                return !(value && value === expect.value);
+              });
 
-            if (assert && !value) throw new Error('expected: ' + expect.name + ' value to equal ' + expect.value);
-            else if (!assert && value) throw new Error('expected: ' + expect.name + ' value to NOT equal ' + expect.value);
+              if (assert && !value) throw new Error('expected: ' + expect.name + ' value to equal ' + expect.value);
+              else if (!assert && value) throw new Error('expected: ' + expect.name + ' value to NOT equal ' + expect.value);
+            }
+            else throw e;
           }
-          else throw e;
         }
 
         keys.forEach(function(key) {
@@ -358,9 +360,9 @@ module.exports = function(secret, asserts) {
    * @param {...*}
    */
   Assertion.not = function(method) {
-    var args = [];
+    let args = [];
 
-    for(var i=1; i<arguments.length; ++i) args.push(arguments[i]);
+    for(let i=1; i<arguments.length; ++i) args.push(arguments[i]);
 
     args.push(false);
 
