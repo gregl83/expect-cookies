@@ -22,6 +22,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
         architecture: [x64, x86]
+        node-version: [16.x, 18.x, 20.x]
         toolchain: [stable]
     steps:
       - uses: actions/checkout@v3
