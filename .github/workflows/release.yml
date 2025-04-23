@@ -84,6 +84,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Publish Package To NPM
         run: npm publish
         env:
