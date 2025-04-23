@@ -12,10 +12,40 @@ jobs:
     name: all systems go
     runs-on: ubuntu-latest
     needs:
+      - verify-version
       - test
       - publish
     steps:
       - run: exit 0
+
+  verify-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get Release Version
+        id: get_release_version
+        run: |
+          RELEASE_VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+          echo "Release Version: $RELEASE_VERSION"
+
+      - name: Get Package.json Version
+        id: get_package_version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "Package.json Version: $PACKAGE_VERSION"
+
+      - name: Compare Versions
+        run: |
+          if [ "$RELEASE_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "::error::Version mismatch! GitHub release version ($RELEASE_VERSION) does not match package.json version ($PACKAGE_VERSION)"
+            exit 1
+          else
+            echo "✅ Versions match! GitHub release version ($RELEASE_VERSION) matches package.json version ($PACKAGE_VERSION)"
+          fi
 
   test:
     runs-on: ${{ matrix.os }}
