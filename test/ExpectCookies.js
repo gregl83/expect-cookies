@@ -9,13 +9,6 @@ const Assertion = require('../src/Assertion');
 
 const secrets = ['one', 'a', 'two', 'b'];
 
-/**
- * FIXME BUG
- *
- * Verbage for expects in cookie expectation is incorrect, need to clarify
- */
-
-
 describe('Cookies', function() {
   it('returns Assertion function', function(done) {
     const assertion = Assertion();
