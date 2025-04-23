@@ -1,6 +1,6 @@
 {
   "name": "expect-cookies",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "SuperTest Cookie Assertions",
   "author": "Gregory Langlais",
   "private": false,
@@ -29,19 +29,16 @@
     "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/"
   },
   "devDependencies": {
-    "cookie-parser": "~1.4.0",
-    "coveralls": "2.11.x",
-    "express": "~4.11.1",
-    "istanbul": "0.3.x",
-    "mocha": "2.2.x",
-    "mockery": "1.4.X",
-    "should": "5.2.x",
-    "sinon": "1.17.x",
-    "supertest": "0.15.x"
+    "cookie-parser": "1.4.7",
+    "express": "5.1.0",
+    "istanbul": "0.4.5",
+    "mocha": "11.1.0",
+    "sinon": "20.0.0",
+    "supertest": "7.1.0"
   },
   "dependencies": {
-    "cookie-signature": "1.0.x",
-    "should": "7.1.x"
+    "cookie-signature": "1.2.2",
+    "should": "13.2.3"
   },
   "license": "MIT"
 }
