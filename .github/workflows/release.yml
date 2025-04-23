@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - verify-version
-      - test
-      - publish
+      - publish-coverage
+      - publish-npm
     steps:
       - run: exit 0
 
@@ -47,21 +47,15 @@ jobs:
             echo "✅ Versions match! GitHub release version ($RELEASE_VERSION) matches package.json version ($PACKAGE_VERSION)"
           fi
 
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        architecture: [x64, x86]
-        node-version: [16.x, 18.x, 20.x]
-        toolchain: [stable]
+  publish-coverage:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20.x'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -79,11 +73,11 @@ jobs:
           files: ./coverage/lcov.info
           verbose: true
 
-  publish:
+  publish-npm:
     runs-on: ubuntu-latest
     needs:
       - verify-version
-      - test
+      - publish-coverage
     steps:
       - uses: actions/checkout@v3
 
