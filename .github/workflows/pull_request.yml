@@ -1,4 +1,4 @@
-name: Node.js Pull Request
+name: Pull Request
 
 on:
   pull_request:
