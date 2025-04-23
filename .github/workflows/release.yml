@@ -38,7 +38,7 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "Package.json Version: $PACKAGE_VERSION"
 
-      - name: Compare Versions
+      - name: Verify Versions Match
         run: |
           if [ "$RELEASE_VERSION" != "$PACKAGE_VERSION" ]; then
             echo "::error::Version mismatch! GitHub release version ($RELEASE_VERSION) does not match package.json version ($PACKAGE_VERSION)"
