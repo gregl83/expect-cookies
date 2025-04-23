@@ -1,6 +1,6 @@
 {
   "name": "expect-cookies",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SuperTest Cookie Assertions",
   "author": "Gregory Langlais",
   "private": false,
@@ -25,20 +25,20 @@
   "homepage": "https://github.com/gregl83/expect-cookies",
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/",
-    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/",
+    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/ && istanbul check-coverage --statement 80 --branch 80 --function 80 --line 80",
     "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/"
   },
   "devDependencies": {
-    "cookie-parser": "~1.4.0",
-    "express": "^4.21.2",
-    "istanbul": "^0.4.5",
-    "mocha": "^11.1.0",
-    "sinon": "^1.17.0",
-    "supertest": "^7.1.0"
+    "cookie-parser": "1.4.7",
+    "express": "5.1.0",
+    "istanbul": "0.4.5",
+    "mocha": "11.1.0",
+    "sinon": "20.0.0",
+    "supertest": "7.1.0"
   },
   "dependencies": {
-    "cookie-signature": "^1.0.0",
-    "should": "^7.1.1"
+    "cookie-signature": "1.2.2",
+    "should": "13.2.3"
   },
   "license": "MIT"
 }

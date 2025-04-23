@@ -1,4 +1,4 @@
-var Assertion = require('./Assertion');
+const Assertion = require('./Assertion');
 
 /**
  * Construct cookies assertion (function)
@@ -14,13 +14,13 @@ function ExpectCookies(secret, asserts) {
 
 
 // build ExpectCookies proxy methods
-var assertion = Assertion();
-var methods = Object.getOwnPropertyNames(assertion);
+const assertion = Assertion();
+const methods = Object.getOwnPropertyNames(assertion);
 
 methods.forEach(function(method) {
   if ('function' === typeof assertion[method] && 'undefined' === typeof Function[method]) {
     ExpectCookies[method] = function() {
-      var assertion = Assertion();
+      const assertion = Assertion();
       return assertion[method].apply(assertion, arguments);
     };
   }
