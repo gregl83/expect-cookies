@@ -81,6 +81,9 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    needs:
+      - verify-version
+      - test
     steps:
       - uses: actions/checkout@v3
 
