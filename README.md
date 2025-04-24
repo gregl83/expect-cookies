@@ -1,5 +1,6 @@
 [![Build](https://github.com/gregl83/expect-cookies/actions/workflows/build.yml/badge.svg)](https://github.com/gregl83/expect-cookies/actions/workflows/build.yml)
 [![Coverage Status](https://codecov.io/gh/gregl83/expect-cookies/graph/badge.svg?token=S9vGTwnOw6)](https://codecov.io/gh/gregl83/expect-cookies)
+[![NPMjs.com](https://img.shields.io/npm/v/expect-cookies.svg)](https://www.npmjs.com/package/expect-cookies)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/gregl83/expect-cookies/blob/master/LICENSE)
 # expect-cookies
 
