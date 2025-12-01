@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "cookie-parser": "1.4.7",
-    "express": "5.1.0",
+    "express": "5.2.0",
     "istanbul": "0.4.5",
     "mocha": "11.1.0",
     "sinon": "20.0.0",
