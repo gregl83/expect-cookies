@@ -17,7 +17,7 @@ Writing HTTP cookie tests can result in redundant and verbose test code.
 This module was written to make testing cookies easier and reduce redundancies.
 
 > [!WARNING]
-> This project has been merged into [supertest v7.2](https://github.com/forwardemail/supertest/pull/868) via Dolan Murvihill and is now deprecated which means it will no longer maintained. Use the latest version of [supertest](https://github.com/forwardemail/supertest) for access to the `expect-cookies` API. Issues should be tracked in [supertest issues](https://github.com/forwardemail/supertest/issues).
+> This project has been merged into [supertest v7.2](https://github.com/forwardemail/supertest/pull/868) via Dolan Murvihill and is now deprecated which means it will no longer be maintained. Use the latest version of [supertest](https://github.com/forwardemail/supertest) for access to the `expect-cookies` API. Issues should be tracked in [supertest issues](https://github.com/forwardemail/supertest/issues).
 
 ## Requirements
 
