@@ -1,3 +1,4 @@
+![Deprecated](https://img.shields.io/badge/deprecated-red)
 [![Build](https://github.com/gregl83/expect-cookies/actions/workflows/build.yml/badge.svg)](https://github.com/gregl83/expect-cookies/actions/workflows/build.yml)
 [![Coverage Status](https://codecov.io/gh/gregl83/expect-cookies/graph/badge.svg?token=S9vGTwnOw6)](https://codecov.io/gh/gregl83/expect-cookies)
 [![NPMjs.com](https://img.shields.io/npm/v/expect-cookies.svg)](https://www.npmjs.com/package/expect-cookies)
@@ -9,11 +10,14 @@
 
 SuperTest Cookie Assertions
 
-HTTP cookie assertions via [super-test](https://github.com/visionmedia/supertest).
+HTTP cookie assertions via [supertest](https://github.com/visionmedia/supertest).
 
 Writing HTTP cookie tests can result in redundant and verbose test code.
 
 This module was written to make testing cookies easier and reduce redundancies.
+
+> [!WARNING]
+> This project has been merged into [supertest v7.2](https://github.com/forwardemail/supertest/pull/868) via Dolan Murvihill and is now deprecated which means it will no longer maintained. Use the latest version of [supertest](https://github.com/forwardemail/supertest) for access to the `expect-cookies` API. Issues should be tracked in [supertest issues](https://github.com/forwardemail/supertest/issues).
 
 ## Requirements
 
